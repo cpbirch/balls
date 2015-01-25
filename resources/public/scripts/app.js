@@ -19,17 +19,11 @@ requirejs.config({
 });
 
 
-require(['main', 'repository', 'settings', 'three', 'lib/tween', 'jquery', 'lodash'], function (main, repo, settings) {
+require(['main', 'settings', 'three', 'lib/tween', 'jquery', 'lodash'], function (main, settings) {
   var cctrayUrl = settings.cctrayUrl()
 
   if (cctrayUrl) {
-    repo.getPipelines(cctrayUrl)
-      .then(function(d) {
-        main(d, cctrayUrl)
-      })
-      .fail(function() {
-        settings.show();
-      })
+    main(cctrayUrl);
   }
 
 });

@@ -127,9 +127,8 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
       return projectsData;
     }
 
-    function update(cctrayUrl) {
-      $.when(repository.getPipelines(cctrayUrl))
-        .then(updatePipelines)
+    function update(data) {
+      $.when(updatePipelines(data))
         .then(removeNonExistingPipelines)
         .then(nonGreenBuilds.update);
     }
