@@ -1,4 +1,6 @@
-define(['utils/pipelineStatus', 'three'], function (pipelineStatus) {
+define(['utils/pipelineStatus', 'text!shaders/ballsVertex.shader', 'text!shaders/ballsFragment.shader', 'three'],
+  function (pipelineStatus, vertexShader, fragmentShader) {
+
   var colors = {
     green: 0, yellow: 1, red: 2, sleeping: 3
   };
@@ -39,8 +41,8 @@ define(['utils/pipelineStatus', 'three'], function (pipelineStatus) {
           value: fragmentColorValues
         }
       },
-      vertexShader: document.getElementById('vs').textContent,
-      fragmentShader: document.getElementById("fragment-shader").textContent,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
       shading: THREE.FlatShading
     });
   }

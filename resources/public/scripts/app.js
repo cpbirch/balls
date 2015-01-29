@@ -7,14 +7,15 @@ requirejs.config({
     three: '../lib/three',
     lodash: '../lib/lodash',
     hex2rgb: 'utils/hexToRgb',
-    debounce: '../lib/jquery-debounce'
+    debounce: '../lib/jquery-debounce',
+    text: '../lib/requireText'
   },
 
   shim: {
     three: { exports: 'THREE'},
     jquery: { exports: '$'},
     debounce: {exports: '$', deps: ['jquery']},
-    lodash: {exports: '_'}
+    lodash: {exports: '_'},
   }
 });
 
