@@ -5,7 +5,7 @@ define(function () {
   }
 
   function isBroken(data) {
-    return data.activity === 'sleeping' && data["last-build-status"] === 'failure';
+    return data.activity === 'sleeping' && _.contains(['failure', 'building'], data["last-build-status"])
   }
 
   function isNotGreen(data) {

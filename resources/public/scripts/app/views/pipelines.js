@@ -129,7 +129,6 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
     function update(data) {
       $.when(updatePipelines(data))
         .then(removeNonExistingPipelines)
-        .then(nonGreenBuilds.update);
     }
 
     return {

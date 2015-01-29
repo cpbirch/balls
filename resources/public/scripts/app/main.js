@@ -1,5 +1,6 @@
-define(['views/pipelines', 'views/camera', 'views/renderer', 'views/scene', 'settings', 'views/lights'],
-  function (pipelines, camera, renderer, scene, settings) {
+define(['views/pipelines', 'views/camera', 'views/renderer',
+        'views/scene', 'settings', 'views/nonGreenBuilds', 'views/lights'],
+  function (pipelines, camera, renderer, scene, settings, nonGreenBuilds) {
 
     function render() {
       TWEEN.update();
@@ -21,7 +22,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer', 'views/scene', 'set
     }
 
     function start() {
-      settings.getPipelines()
+      settings.getGreenPipelines()
         .then(function(d) {
           pipelines.init(d);
         });
@@ -30,9 +31,14 @@ define(['views/pipelines', 'views/camera', 'views/renderer', 'views/scene', 'set
       render();
 
       setInterval(function() {
-        settings.getPipelines()
+        settings.getGreenPipelines()
           .then(function(d) {
             pipelines.update(d);
+          })
+
+        settings.getNonGreenPipelines()
+          .then(function(d) {
+            nonGreenBuilds.update(d);
           })
       }, 2000);
     }

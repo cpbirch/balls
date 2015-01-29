@@ -2,7 +2,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   var cctrayUrlKey = "cctrayUrl";
   var rotateNonGreenTextKey = "rotateNonGreenText";
-  var selectedPipelineNamesKey = "selectedPipelineNames";
   var filterFieldKey = "filterField";
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
@@ -23,10 +22,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   function focusOnCCTrayUrlTextfield() {
     $('#ci-url-text').focus();
-  }
-
-  function getSelectedPipelineNames() {
-    return JSON.parse(localStorage.getItem(selectedPipelineNamesKey));
   }
 
   function filterCriteriaFromStorage() {
@@ -84,14 +79,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
     var checked = $('#rotate-non-green-text').is(':checked');
     localStorage.setItem(rotateNonGreenTextKey, checked ? 'on' : 'off');
-
-    var selectedPipelineNames = $('#selected-pipelines .pipeline').map(function () {
-      return $(this).text()
-    }).get();
-
-    var names = JSON.stringify(selectedPipelineNames);
-
-    localStorage.setItem(selectedPipelineNamesKey, names);
 
     settings.hide();
 
@@ -187,12 +174,19 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     rotateNonGreenText: function () {
       return localStorage.getItem(rotateNonGreenTextKey) === 'on';
     },
-    getPipelines: function() {
+    cctrayUrl: ccTrayUrlFromStorage,
+
+    getGreenPipelines: function() {
       var cctrayUrl = ccTrayUrlFromStorage();
       if (!_.isEmpty(cctrayUrl)) {
-        return repo.getPipelines(cctrayUrl, filterCriteriaFromStorage());
+        return repo.getGreenPipelines(cctrayUrl, filterCriteriaFromStorage());
       }
-
+    },
+    getNonGreenPipelines: function() {
+      var cctrayUrl = ccTrayUrlFromStorage();
+      if (!_.isEmpty(cctrayUrl)) {
+        return repo.getNonGreenPipelines(cctrayUrl, filterCriteriaFromStorage());
+      }
     },
     show: showSettingsView,
     repulsionFactor: getRepulsionFactorFromStorage,

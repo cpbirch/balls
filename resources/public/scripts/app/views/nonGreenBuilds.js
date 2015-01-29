@@ -29,14 +29,6 @@ define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator'
       return group;
     }
 
-    function removeFromFocus(name) {
-      if (nonGreenBuilds[name]) {
-        var grp = nonGreenBuilds[name];
-        scene.remove(grp);
-        delete nonGreenBuilds[name];
-      }
-    }
-
     function adjustCameraPosition(camera_z_location) {
       var spheresCenter = new THREE.Vector3(0, 0, 0);
 
@@ -156,10 +148,10 @@ define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator'
       var newPipelineNames = _.keys(projectData);
       var nonExistingPipelineNames = _.xor(newPipelineNames, previousPipelineNames);
       nonExistingPipelineNames.forEach(function (name) {
-        var sphere = nonGreenBuilds[name];
+        var grp = nonGreenBuilds[name];
 
-        if (sphere) {
-          scene.remove(sphere)
+        if (grp) {
+          scene.remove(grp)
           delete nonGreenBuilds[name];
         }
 
@@ -170,12 +162,7 @@ define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator'
 
     function update(projectsData) {
       _.each(projectsData, function (data, name) {
-        var status = pipelineStatus(data);
-        if (status.isGreen) {
-          removeFromFocus(name);
-        } else {
-          focusOn(name, data);
-        }
+        focusOn(name, data);
       });
 
       removeNonExistingPipelines(projectsData)
