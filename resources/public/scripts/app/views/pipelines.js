@@ -27,8 +27,9 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
       });
     }
 
-    function createAllPipelineSpheres(pipelinesData) {
-      _.each(pipelinesData, createPipelineSphere);
+    function createAllPipelineSpheres(successfulBuilds) {
+      successfulBuilds = successfulBuilds || [];
+      successfulBuilds.forEach(createPipelineSphere)
 
       updateSpherePositionAndScales();
     }
@@ -94,10 +95,12 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
       }
     }
 
-    function removeNonExistingPipelines(projectData) {
+    function removeNonExistingPipelines(newPipelinesData) {
       var previousPipelineNames = _.keys(pipelineSpheres);
-      var newPipelineNames = _.keys(projectData);
+      var newPipelineNames = _.pluck(newPipelinesData, "name");
+
       var nonExistingPipelineNames = _.xor(newPipelineNames, previousPipelineNames);
+
       previousPipelineNames.forEach(function (name, index) {
         if (_.contains(nonExistingPipelineNames, name)) {
           var sphere = pipelineSpheres[name];
@@ -108,13 +111,11 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
           scales.splice(index, 1);
         }
       })
-
-      return projectData;
     }
 
-    function updatePipelines(projectsData) {
-      _.each(projectsData, function (data, name) {
-        var sphere = pipelineSpheres[name];
+    function updatePipelines(pipelinesData) {
+      _.each(pipelinesData, function (data) {
+        var sphere = pipelineSpheres[data.name];
         if (!sphere) {
           createPipelineSphere(data);
           updateSpherePositionAndScales()
@@ -122,13 +123,15 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
           pipelineUpdater(sphere, data);
         }
       });
-
-      return projectsData;
     }
 
-    function update(data) {
-      $.when(updatePipelines(data))
-        .then(removeNonExistingPipelines)
+    function update(successfulBuilds) {
+      successfulBuilds = successfulBuilds || [];
+
+      $.when(updatePipelines(successfulBuilds))
+        .then(function() {
+          removeNonExistingPipelines(successfulBuilds);
+        });
     }
 
     return {

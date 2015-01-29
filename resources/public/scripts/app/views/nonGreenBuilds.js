@@ -1,6 +1,6 @@
-define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator',
+define(['views/pipelineUpdater', 'views/pipelineCreator',
     'views/scene', 'views/camera', 'views/pipelineText', 'views/pipelineProgress'],
-  function (pipelineStatus, pipelineUpdater, pipelineCreator, scene, camera, pipelineText, pipelineProgress) {
+  function (pipelineUpdater, pipelineCreator, scene, camera, pipelineText, pipelineProgress) {
     var nonGreenBuilds = {};
     var distanceBetweenSpheres = 22;
     var sphereScale = 15;
@@ -112,14 +112,14 @@ define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator'
       pipelineUpdater(sphere, data);
     }
 
-    function addPipelineToFocusGroup(name, data) {
+    function addPipelineToFocusGroup(data) {
       var sphere = pipelineCreator.create(data, sphereScale);
 
       sphere.material.uniforms.positions.value = [sphere.position];
       sphere.material.uniforms.scales.value = [sphereScale];
 
       sphere.position.set(0, 0, 0);
-      var sprite = pipelineText.create(name);
+      var sprite = pipelineText.create(data.name);
 
       sprite.position.set(0, 0, 0);
       sprite.scale.set(30, 30, 1.0);
@@ -129,24 +129,26 @@ define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator'
       progress.scale.set(30, 30, 1.0);
 
       var group = createGroup(sphere, sprite, progress);
-      nonGreenBuilds[name] = group;
+      nonGreenBuilds[data.name] = group;
 
       scene.add(group);
     }
 
-    function focusOn(name, data, status) {
-      var group = nonGreenBuilds[name];
+    function focusOn(data) {
+      var group = nonGreenBuilds[data.name];
       if (group) {
         updatePipeline(group, data)
       } else {
-        addPipelineToFocusGroup(name, data, status);
+        addPipelineToFocusGroup(data);
       }
     }
 
     function removeNonExistingPipelines(projectData) {
       var previousPipelineNames = _.keys(nonGreenBuilds);
-      var newPipelineNames = _.keys(projectData);
+      var newPipelineNames = _.pluck(projectData, "name");
+
       var nonExistingPipelineNames = _.xor(newPipelineNames, previousPipelineNames);
+
       nonExistingPipelineNames.forEach(function (name) {
         var grp = nonGreenBuilds[name];
 
@@ -154,18 +156,18 @@ define(['utils/pipelineStatus', 'views/pipelineUpdater', 'views/pipelineCreator'
           scene.remove(grp)
           delete nonGreenBuilds[name];
         }
-
       });
-
-      return projectData;
     }
 
-    function update(projectsData) {
-      _.each(projectsData, function (data, name) {
-        focusOn(name, data);
-      });
+    function update(brokenData, sickBuildingData, healthyBuildingData) {
+      brokenData = brokenData || [];
+      healthyBuildingData = healthyBuildingData || [];
+      sickBuildingData = sickBuildingData || [];
 
-      removeNonExistingPipelines(projectsData)
+      var nonGreenPipelinesData = brokenData.concat(sickBuildingData).concat(healthyBuildingData);
+      nonGreenPipelinesData.forEach(focusOn)
+
+      removeNonExistingPipelines(nonGreenPipelinesData)
     }
 
     function count() {

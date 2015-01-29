@@ -6,7 +6,6 @@ requirejs.config({
     repository: 'server/repository',
     three: '../lib/three',
     lodash: '../lib/lodash',
-    hex2rgb: 'utils/hexToRgb',
     debounce: '../lib/jquery-debounce',
     text: '../lib/requireText'
   },

@@ -114,7 +114,9 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   function showPipelinesToSelect(cctrayUrl, filterCriteria) {
     return repo.filteredPipelinesNames(cctrayUrl, filterCriteria)
       .then(showFilteredList)
-      .then(function() {selectedPipelinesField.show(300)});
+      .then(function () {
+        selectedPipelinesField.show(300)
+      });
   }
 
   function onFail() {
@@ -175,18 +177,8 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       return localStorage.getItem(rotateNonGreenTextKey) === 'on';
     },
     cctrayUrl: ccTrayUrlFromStorage,
-
-    getGreenPipelines: function() {
-      var cctrayUrl = ccTrayUrlFromStorage();
-      if (!_.isEmpty(cctrayUrl)) {
-        return repo.getGreenPipelines(cctrayUrl, filterCriteriaFromStorage());
-      }
-    },
-    getNonGreenPipelines: function() {
-      var cctrayUrl = ccTrayUrlFromStorage();
-      if (!_.isEmpty(cctrayUrl)) {
-        return repo.getNonGreenPipelines(cctrayUrl, filterCriteriaFromStorage());
-      }
+    pipelines: function () {
+      return repo.pipelines(ccTrayUrlFromStorage(), filterCriteriaFromStorage());
     },
     show: showSettingsView,
     repulsionFactor: getRepulsionFactorFromStorage,

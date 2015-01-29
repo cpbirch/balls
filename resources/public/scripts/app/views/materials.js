@@ -1,19 +1,21 @@
-define(['utils/pipelineStatus', 'text!shaders/ballsVertex.shader', 'text!shaders/ballsFragment.shader', 'three'],
-  function (pipelineStatus, vertexShader, fragmentShader) {
+define(['text!shaders/ballsVertex.shader', 'text!shaders/ballsFragment.shader', 'three'],
+  function (vertexShader, fragmentShader) {
 
   var colors = {
-    green: 0, yellow: 1, red: 2, sleeping: 3
+    green: 0, yellow: 1, red: 2, sick_building: 3, sleeping: 4
   };
 
   function ballColor(pipelineData) {
     var color = colors.green;
 
-    var status = pipelineStatus(pipelineData);
+    var buildStatus = pipelineData.prognosis;
 
-    if (status.isBuilding) {
+    if (buildStatus === "healthy-building") {
       color = colors.yellow;
-    } else if (status.isBroken) {
+    } else if (buildStatus === "sick") {
       color = colors.red;
+    } else if (buildStatus === "sick-building") {
+      color = colors.sick_building;
     }
 
     return color;

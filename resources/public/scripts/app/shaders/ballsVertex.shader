@@ -28,7 +28,6 @@ void main() {
 		vec3 dir = positions[ i ] - vPosition;
 		float l = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
 		float t = 1. - max( 0., dot( on, dir / sqrt( l ) ) ) * scales[ i ] / l;
-		//float t = 1. - max( 0., dot( on, dir / l ) ) * pow( scales[ i ], 2. ) / pow( l, 2. );
 
 		occlusion += t;
 	}

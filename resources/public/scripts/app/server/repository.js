@@ -1,24 +1,23 @@
 define([], function () {
 
+  function request(endpoint, cctrayUrl, filter) {
+    return $.get(endpoint, {url: cctrayUrl, filter: filter})
+  }
+
   function filteredPipelinesNames(cctrayUrl, filter) {
-    return $.get("/filternames", {url: cctrayUrl, filter: filter})
+    return request("/filternames", cctrayUrl, filter)
       .then(function (data) {
         return data.names;
       });
   }
 
-  function getGreenPipelines(cctrayUrl, filter) {
-    return $.get("/successfulpipelines", {url: cctrayUrl, filter: filter})
-  }
-
-  function getNonGreenPipelines(cctrayUrl, filter) {
-    return $.get("/nongreenpipelines", {url: cctrayUrl, filter: filter})
+  function pipelines(cctrayUrl, filter) {
+    return request("/pipelines", cctrayUrl, filter)
   }
 
   return {
     filteredPipelinesNames: filteredPipelinesNames,
-    getGreenPipelines: getGreenPipelines,
-    getNonGreenPipelines: getNonGreenPipelines
+    pipelines: pipelines
   }
 
 });

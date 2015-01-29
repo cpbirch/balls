@@ -1,7 +1,7 @@
 (ns balls.data.go
   (:require [clj-cctray.core :as parser]))
 
-(defn filter-projects
+(defn- filter-projects
   [projects filter-pattern]
   (if (empty? filter-pattern)
     projects
@@ -13,31 +13,18 @@
   [url]
   (parser/get-projects url {:normalise :all :server :go}))
 
-(defn group-projects
-  [projects]
-  (->> projects
-       (map (juxt :name identity))
-       (into {})))
+(defn- interesting-projects [url filter-pattern]
+  (-> (all-projects url)
+      (filter-projects filter-pattern)))
+
+(defn filter-names
+  [{:keys [url filter]}]
+  {:names (->> (interesting-projects url filter) (map :name))})
 
 (defn get-filtered-projects
-  [url filter-pattern]
-  (-> (all-projects url)
-      (filter-projects filter-pattern)
-      group-projects))
+  [{:keys [url filter]}]
+  (->> (interesting-projects url filter)
+      (group-by :prognosis)))
 
-(defn successful-project? [[_ {:keys [activity last-build-status]}]]
-  (= [:sleeping :success] [activity last-build-status]))
-
-(defn non-green-project? [p]
-  (not (successful-project? p)))
-
-
-(defn get-successful-builds [url filter-pattern]
-  (->> (get-filtered-projects url filter-pattern)
-       (filter successful-project?)
-       (into {})))
-
-(defn get-non-green-builds [url filter-pattern]
-  (->> (get-filtered-projects url filter-pattern)
-       (filter non-green-project?)
-       (into {})))
+(-> (get-filtered-projects {:url "resources/cctray.xml" :filter ".*"})
+    clojure.pprint/pprint)

@@ -22,23 +22,22 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
     }
 
     function start() {
-      settings.getGreenPipelines()
+      settings.pipelines()
         .then(function(d) {
-          pipelines.init(d);
+          pipelines.init(d.healthy);
+          return d;
         });
 
       setEventListeners();
       render();
 
       setInterval(function() {
-        settings.getGreenPipelines()
+        settings.pipelines()
           .then(function(d) {
-            pipelines.update(d);
-          })
-
-        settings.getNonGreenPipelines()
-          .then(function(d) {
-            nonGreenBuilds.update(d);
+            pipelines.update(d.healthy);
+            return d;
+          }).then(function(d) {
+            nonGreenBuilds.update(d.sick, d['sick-building'], d['healthy-building'])
           })
       }, 2000);
     }
