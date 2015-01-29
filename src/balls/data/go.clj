@@ -25,6 +25,3 @@
   [{:keys [url filter]}]
   (->> (interesting-projects url filter)
       (group-by :prognosis)))
-
-(-> (get-filtered-projects {:url "resources/cctray.xml" :filter ".*"})
-    clojure.pprint/pprint)
