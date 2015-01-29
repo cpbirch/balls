@@ -6,11 +6,12 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
 
-  var settings = $('#control-interface');
+  var settings = $('#config-interface');
   var filterField = $('#filter-field');
   var selectedPipelinesField = $('#selected-pipelines');
   var repulsionFactorField = $('#repulsion-factor');
   var attractionFactorField = $('#attraction-factor');
+  var preferencesField = $('#preferences');
 
   function ccTrayUrlFromStorage() {
     return localStorage.getItem(cctrayUrlKey);
@@ -43,6 +44,11 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     return v ? parseInt(v) / 100 : 0.01;
   }
 
+  $('#preferences-control-btn').click(function(e) {
+    e.preventDefault();
+    settings.hide(150);
+    preferencesField.toggle(250);
+  });
 
   $('#settings-close-btn').click(function (e) {
     e.preventDefault();
@@ -51,7 +57,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   filterField.val(filterCriteriaFromStorage())
 
-  $('#controls').click(function (e) {
+  $('#config').click(function (e) {
     e.preventDefault();
     showSettingsView();
   });
@@ -153,6 +159,8 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   }
 
   function showSettingsView() {
+    preferencesField.hide(250);
+
     var cctrayUrl = localStorage.getItem(cctrayUrlKey);
 
     if (cctrayUrl) {

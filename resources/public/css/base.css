@@ -33,7 +33,7 @@ input[type='range'] {
   margin-left: 15px;
 }
 
-#control-interface {
+#config-interface{
   display: none;
   position: absolute;
   left: 30px;
@@ -91,24 +91,18 @@ input[type='range'] {
   background-color: rgba(0, 127, 127, 0.262745);
   overflow-x: auto;
   overflow-y: scroll;
-  max-height: 50%;
+  max-height: 74%;
   display: none;
 }
 
 #preferences {
+  display: none;
   position: absolute;
   padding: 10px;
-  left: 15px;
-  right: 15px;
-  margin-top: 10px;
+  left: 10px;
+  bottom: 50px;
+  width: 100%;
   background-color: rgba(0, 127, 127, 0.262745);
-}
-
-#preferences .title {
-  border-bottom: 1px solid white;
-  padding-bottom: 6px;
-  margin-bottom: 20px;
-  font-size: 30px;
 }
 
 #preferences * {
@@ -129,6 +123,12 @@ input[type='range'] {
   height: 20px;
 }
 
+#preferences-control {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  height: 20px;
+}
 
 body {
   font-family:sans-serif;
