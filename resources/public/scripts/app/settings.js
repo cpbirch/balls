@@ -98,24 +98,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     location.reload();
   });
 
-  function filterPipelines(names, filterCriteria) {
-
-    var re = new RegExp(filterCriteria || ".*", "mg");
-    var inputStr = '\n' + names.join('\n');
-    var matchedNames = inputStr.match(re);
-
-    if (!_.isEmpty(matchedNames)) {
-      showFilteredList(_.intersection(matchedNames, names));
-    }
-  }
-
   function showFilteredList(names) {
+
+    selectedPipelinesField.html('')
 
     if (_.isEmpty(names)) {
       return;
     }
-
-    selectedPipelinesField.html('')
 
     names.sort().forEach(function (n) {
       selectedPipelinesField.append('<label class="pipeline">' + n + '</label>')
@@ -124,26 +113,21 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     selectedPipelinesField.show(250);
   }
 
+
+  filterField.on('keyup', $.debounce(function () {
+    var val = filterField.val().trim();
+    var cctrayUrl = cctrayUrlFromUI();
+    if (_.isEmpty(val) || _.isEmpty(cctrayUrl)) {
+      return;
+    }
+
+    showPipelinesToSelect(cctrayUrl, val);
+  }, 300));
+
   function showPipelinesToSelect(cctrayUrl, filterCriteria) {
-    return repo.getPipelines(cctrayUrl)
-      .then(function (d) {
-        var names = _.keys(d);
-        filterPipelines(names, filterCriteria);
-
-        filterField.unbind();
-        filterField.on('keyup', $.debounce(function () {
-          var val = filterField.val().trim();
-          if (_.isEmpty(val)) {
-            return;
-          }
-
-          filterPipelines(names, val);
-        }, 300));
-
-        filterField.show(300);
-        selectedPipelinesField.show(300);
-        return d;
-      });
+    return repo.filteredPipelinesNames(cctrayUrl, filterCriteria)
+      .then(showFilteredList)
+      .then(function() {selectedPipelinesField.show(300)});
   }
 
   function onFail() {
@@ -200,14 +184,20 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
 
   return {
-    cctrayUrl: ccTrayUrlFromStorage,
     rotateNonGreenText: function () {
       return localStorage.getItem(rotateNonGreenTextKey) === 'on';
     },
-    selectedPipelineNames: getSelectedPipelineNames,
+    getPipelines: function() {
+      var cctrayUrl = ccTrayUrlFromStorage();
+      if (!_.isEmpty(cctrayUrl)) {
+        return repo.getPipelines(cctrayUrl, filterCriteriaFromStorage());
+      }
+
+    },
     show: showSettingsView,
     repulsionFactor: getRepulsionFactorFromStorage,
     attractionFactor: getAttractionFactorFromStorage
+
   }
 
 });

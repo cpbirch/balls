@@ -1,5 +1,5 @@
-define(['views/pipelines', 'views/camera', 'views/renderer', 'views/scene', 'settings', 'repository', 'views/lights'],
-  function (pipelines, camera, renderer, scene, settings, repo) {
+define(['views/pipelines', 'views/camera', 'views/renderer', 'views/scene', 'settings', 'views/lights'],
+  function (pipelines, camera, renderer, scene, settings) {
 
     function render() {
       TWEEN.update();
@@ -20,27 +20,17 @@ define(['views/pipelines', 'views/camera', 'views/renderer', 'views/scene', 'set
 
     }
 
-    function filterPipelines(cctrayUrl) {
-      return repo.getPipelines(cctrayUrl)
-        .then(function(pipelinesData) {
-          var selectedPipelinesNames = settings.selectedPipelineNames();
-          var names = _.keys(pipelinesData);
-          var selectedNames = _.intersection(names, selectedPipelinesNames);
-          return _.pick(pipelinesData, selectedNames);
-        })
-
-    }
-
-    function start(cctrayUrl) {
-      filterPipelines(cctrayUrl)
+    function start() {
+      settings.getPipelines()
         .then(function(d) {
           pipelines.init(d);
         });
 
       setEventListeners();
       render();
+
       setInterval(function() {
-        filterPipelines(cctrayUrl)
+        settings.getPipelines()
           .then(function(d) {
             pipelines.update(d);
           })

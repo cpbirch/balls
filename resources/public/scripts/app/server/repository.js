@@ -1,25 +1,22 @@
 define([], function () {
 
-  var pipelinesUrl = "/pipelines";
+  function getPipelines(cctrayUrl, filter) {
+    return $.get("/pipelines", {url: cctrayUrl, filter: filter})
+      .then(function (data) {
+        return data.projects;
+      });
+  }
 
-  //_.keys(data).forEach(function(name){
-  //  if (!_.isEmpty(selectedPipelinesNames) && !_.contains(selectedPipelinesNames, name)) {
-  //    delete data[name];
-  //  }
-  //});
-
-
-  function getPipelines(cctrayUrl) {
-    return $.get(pipelinesUrl, {url: cctrayUrl})
-            .then(function (data) {
-                    return _.indexBy(data.projects, "name");
-                  });
-
-    // todo: need to select on selected-pipelines
+  function filteredPipelinesNames(cctrayUrl, filter) {
+    return $.get("/filternames", {url: cctrayUrl, filter: filter})
+      .then(function (data) {
+        return data.names;
+      });
   }
 
   return {
-    getPipelines: getPipelines
+    getPipelines: getPipelines,
+    filteredPipelinesNames: filteredPipelinesNames
   }
 
 });

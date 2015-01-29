@@ -22,7 +22,12 @@
        (index-page/contents))
 
   (GET "/pipelines" {params :params}
-       (as-json-response (go/get-all-projects (:url params))))
+       (-> (go/get-all-projects (:url params) (:filter params))
+           as-json-response))
+
+  (GET "/filternames" {params :params}
+       (let [names (-> (go/get-all-projects (:url params) (:filter params)) :projects keys)]
+         (as-json-response {:names names})))
 
   (route/resources "/"))
 

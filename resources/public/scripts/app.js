@@ -21,14 +21,7 @@ requirejs.config({
 
 
 require(['main', 'settings', 'three', 'lib/tween', 'jquery', 'lodash'], function (main, settings) {
-  var cctrayUrl = settings.cctrayUrl()
-
-  if (cctrayUrl) {
-    main(cctrayUrl);
-  } else {
-    settings.show()
-  }
-
+  _.isEmpty(settings.getPipelines()) ? settings.show() : main()
 });
 
 

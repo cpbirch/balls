@@ -48,7 +48,6 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
     function startAnimation() {
       var targetPosition = target();
 
-
       var balls = _.values(pipelineSpheres);
 
       balls.forEach(function (ball, j) {
