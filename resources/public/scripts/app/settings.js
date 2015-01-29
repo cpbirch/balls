@@ -58,7 +58,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   $('#controls').click(function (e) {
     e.preventDefault();
-    settings.show(focusOnCCTrayUrlTextfield);
+    showSettingsView();
   });
 
 
@@ -179,12 +179,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     });
   }
 
-  function displayControlsIfNeeded() {
+  function showSettingsView() {
     var cctrayUrl = localStorage.getItem(cctrayUrlKey);
 
     if (cctrayUrl) {
       $('#ci-url-text').val(localStorage.getItem(cctrayUrlKey));
       showPipelinesToSelect(cctrayUrl, filterCriteriaFromStorage())
+        .then(settings.show(200))
         .fail(function () {
           settings.show(onFail);
         })
@@ -196,7 +197,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   fetchPipelinesBtnSetup();
   rotateNonGreenTextSetup();
-  displayControlsIfNeeded();
 
 
   return {
@@ -205,7 +205,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       return localStorage.getItem(rotateNonGreenTextKey) === 'on';
     },
     selectedPipelineNames: getSelectedPipelineNames,
-    show: settings.show,
+    show: showSettingsView,
     repulsionFactor: getRepulsionFactorFromStorage,
     attractionFactor: getAttractionFactorFromStorage
   }

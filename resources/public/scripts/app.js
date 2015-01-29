@@ -15,7 +15,7 @@ requirejs.config({
     three: { exports: 'THREE'},
     jquery: { exports: '$'},
     debounce: {exports: '$', deps: ['jquery']},
-    lodash: {exports: '_'},
+    lodash: {exports: '_'}
   }
 });
 
@@ -25,6 +25,8 @@ require(['main', 'settings', 'three', 'lib/tween', 'jquery', 'lodash'], function
 
   if (cctrayUrl) {
     main(cctrayUrl);
+  } else {
+    settings.show()
   }
 
 });
