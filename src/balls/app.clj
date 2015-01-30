@@ -28,7 +28,7 @@
 
   (GET "/filternames" {params :params}
        (-> params
-           go/filter-names
+           go/find-names
            as-json-response))
 
   (route/resources "/"))

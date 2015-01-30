@@ -1,27 +1,34 @@
 (ns balls.data.go
   (:require [clj-cctray.core :as parser]))
 
-(defn- filter-projects
-  [projects filter-pattern]
-  (if (empty? filter-pattern)
+(defn- select-projects
+  [projects select-pattern]
+  (if (empty? select-pattern)
     projects
-    (let [filter-fn #(re-matches (re-pattern filter-pattern) (:name %))]
+    (let [by-name #(re-matches (re-pattern select-pattern) (:name %))]
       (->> projects
-           (filter filter-fn)))))
+           (filter by-name)))))
 
 (defn- all-projects
   [url]
   (parser/get-projects url {:normalise :all :server :go}))
 
-(defn- interesting-projects [url filter-pattern]
-  (-> (all-projects url)
-      (filter-projects filter-pattern)))
+(defn- exclude-projects [projects exclude-pattern]
+  (if (empty? exclude-pattern)
+    projects
+    (let [by-name #(re-matches (re-pattern exclude-pattern) (:name %))]
+      (->> projects (remove by-name)))))
 
-(defn filter-names
-  [{:keys [url filter]}]
-  {:names (->> (interesting-projects url filter) (map :name))})
+(defn- interesting-projects [url select-pattern exclude-pattern]
+  (-> (all-projects url)
+      (select-projects select-pattern)
+      (exclude-projects exclude-pattern)))
+
+(defn find-names
+  [{:keys [url select exclude]}]
+  {:names (->> (interesting-projects url select exclude) (map :name))})
 
 (defn get-filtered-projects
-  [{:keys [url filter]}]
-  (->> (interesting-projects url filter)
+  [{:keys [url select exclude]}]
+  (->> (interesting-projects url select exclude)
       (group-by :prognosis)))

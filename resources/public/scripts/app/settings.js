@@ -3,11 +3,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var cctrayUrlKey = "cctrayUrl";
   var rotateNonGreenTextKey = "rotateNonGreenText";
   var filterFieldKey = "filterField";
+  var excludeFieldKey = "excludeField";
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
 
   var settings = $('#config-interface');
   var filterField = $('#filter-field');
+  var excludeField = $('#exclude-field');
   var selectedPipelinesField = $('#selected-pipelines');
   var repulsionFactorField = $('#repulsion-factor');
   var attractionFactorField = $('#attraction-factor');
@@ -30,9 +32,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     return _.isEmpty(v) ? ".*" : v;
   }
 
-  if (filterCriteriaFromStorage()) {
-    filterField.val(filterCriteriaFromStorage())
+  function excludeCriteriaFromStorage() {
+    return localStorage.getItem(excludeFieldKey) || "";
   }
+
+  filterField.val(filterCriteriaFromStorage())
+
+  excludeField.val(excludeCriteriaFromStorage())
 
   function getRepulsionFactorFromStorage() {
     var v = localStorage.getItem(repulsionFactorKey);
@@ -44,7 +50,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     return v ? parseInt(v) / 100 : 0.01;
   }
 
-  $('#preferences-control-btn').click(function(e) {
+  $('#preferences-control-btn').click(function (e) {
     e.preventDefault();
     settings.hide(150);
     preferencesField.toggle(250);
@@ -55,7 +61,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     settings.hide();
   });
 
-  filterField.val(filterCriteriaFromStorage())
 
   $('#config').click(function (e) {
     e.preventDefault();
@@ -80,6 +85,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     e.preventDefault();
 
     localStorage.setItem(filterFieldKey, filterField.val().trim());
+    localStorage.setItem(excludeFieldKey, excludeField.val().trim());
 
     localStorage.setItem(cctrayUrlKey, cctrayUrlFromUI());
 
@@ -106,19 +112,22 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     selectedPipelinesField.show(250);
   }
 
+  function searchNames() {
 
-  filterField.on('keyup', $.debounce(function () {
-    var val = filterField.val().trim();
     var cctrayUrl = cctrayUrlFromUI();
-    if (_.isEmpty(val) || _.isEmpty(cctrayUrl)) {
+    if (_.isEmpty(cctrayUrl)) {
       return;
     }
 
-    showPipelinesToSelect(cctrayUrl, val);
-  }, 300));
+    showPipelinesToSelect(cctrayUrl, filterField.val().trim(), excludeField.val().trim());
+  }
 
-  function showPipelinesToSelect(cctrayUrl, filterCriteria) {
-    return repo.filteredPipelinesNames(cctrayUrl, filterCriteria)
+
+  filterField.on('keyup', $.debounce(searchNames, 300));
+  excludeField.on('keyup', $.debounce(searchNames, 300));
+
+  function showPipelinesToSelect(cctrayUrl, filterCriteria, excludeCriteria) {
+    return repo.filteredPipelinesNames(cctrayUrl, filterCriteria, excludeCriteria)
       .then(showFilteredList)
       .then(function () {
         selectedPipelinesField.show(300)
@@ -165,7 +174,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
     if (cctrayUrl) {
       $('#ci-url-text').val(localStorage.getItem(cctrayUrlKey));
-      showPipelinesToSelect(cctrayUrl, filterCriteriaFromStorage())
+      showPipelinesToSelect(cctrayUrl, filterCriteriaFromStorage(), excludeCriteriaFromStorage())
         .then(settings.show(200))
         .fail(function () {
           settings.show(onFail);
@@ -186,7 +195,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     },
     cctrayUrl: ccTrayUrlFromStorage,
     pipelines: function () {
-      return repo.pipelines(ccTrayUrlFromStorage(), filterCriteriaFromStorage());
+      return repo.pipelines(ccTrayUrlFromStorage(), filterCriteriaFromStorage(), excludeCriteriaFromStorage());
     },
     show: showSettingsView,
     repulsionFactor: getRepulsionFactorFromStorage,

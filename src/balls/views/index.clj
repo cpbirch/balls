@@ -13,7 +13,8 @@
                 [:input {:type "text" :placeholder "cc-tray url" :id "ci-url-text" :value ""}]
                 [:input {:type "button" :id "ci-url-fetch-btn" :value "fetch"}]
 
-                [:input {:type "text" :id "filter-field" :placeholder "filter projects. can use regex" :value ""}]
+                [:input {:type "text" :id "filter-field" :placeholder "filter projects." :value ".*"}]
+                [:input {:type "text" :id "exclude-field" :placeholder "exclude projects." :value ""}]
 
                 [:div {:id "selected-pipelines"}]
 

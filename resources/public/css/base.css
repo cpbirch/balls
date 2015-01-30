@@ -50,7 +50,7 @@ input[type='range'] {
   width: 83%;
 }
 
-#filter-field {
+#filter-field, #exclude-field {
   font-size: 20px;
   width: 100%;
   display: inline-block;
@@ -91,7 +91,7 @@ input[type='range'] {
   background-color: rgba(0, 127, 127, 0.262745);
   overflow-x: auto;
   overflow-y: scroll;
-  max-height: 74%;
+  max-height: 69%;
   display: none;
 }
 
