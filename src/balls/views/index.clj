@@ -46,7 +46,7 @@
                 [:label "attraction"]
                 [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]]
 
-               [:audio {:id "build-breaking-audio" :src "/sounds/mario_dies.wav"}]
+               [:audio {:id "build-breaking-audio" :src "/sounds/wario_ah_hahaha_wonderful.wav"}]
 
                [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}]))
 
