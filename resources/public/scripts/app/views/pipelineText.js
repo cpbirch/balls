@@ -1,8 +1,8 @@
 define(['settings'], function (settings) {
 
-  var radius = 150;
+  var radius = 125;
   var angle = Math.PI * 1.5;
-  var size = 500;
+  var size = 380;
 
   function textMaterial(canvas) {
     var amap = new THREE.Texture(canvas);
@@ -25,13 +25,14 @@ define(['settings'], function (settings) {
   }
 
   function setTextStyling(context) {
-    context.font = '20pt Calibri';
+    context.font = '50pt Calibri';
     context.textAlign = 'center';
     context.fillStyle = 'white';
     context.lineWidth = 4;
   }
 
   function drawTextAlongArc(canvas, text) {
+    var shortenedText = text.length <= 20 ? text : text.substr(0, 18) + "..";
     var context = canvas.getContext('2d');
 
     setTextStyling(context);
@@ -39,16 +40,16 @@ define(['settings'], function (settings) {
     var x = size / 2;
     var y = size / 2;
 
-    var numRadsPerLetter = Math.PI / text.length;
+    var numRadsPerLetter = 0.3;
     context.save();
     context.translate(x,y);
     context.rotate(angle);
 
-    for(var i=0;i<text.length;i++){
+    for(var i=0;i<shortenedText.length;i++){
       context.save();
       context.rotate(i*numRadsPerLetter);
 
-      context.fillText(text[i],0,-radius);
+      context.fillText(shortenedText[i],0,-radius);
       context.restore();
     }
     context.restore();

@@ -2,8 +2,8 @@ define(function () {
 
   var percent = 60 / 100;
   var color = '#555555';
-  var lineWidth = 25;
-  var radius = 95;
+  var lineWidth = 55;
+  var radius = 110;
   var size = 300;
 
   var drawCircle = function(ctx) {

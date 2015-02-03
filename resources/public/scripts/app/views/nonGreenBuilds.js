@@ -2,7 +2,7 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
     'views/scene', 'views/camera', 'views/pipelineText', 'views/pipelineProgress'],
   function (pipelineUpdater, pipelineCreator, scene, camera, pipelineText, pipelineProgress) {
     var nonGreenBuilds = {};
-    var distanceBetweenSpheres = 22;
+    var distanceBetweenSpheres = 30;
     var sphereScale = 15;
 
     var group_z_position = 300;
@@ -96,8 +96,10 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
           move(grp, newPos, 2000);
         }
 
+        updatedCameraZLocation += groups.length == 1 ? 0 : 7;
+
         if (count === maxInCircle) {
-          updatedCameraZLocation += groups.length == 1 ? 0 : 15;
+          //updatedCameraZLocation += groups.length == 1 ? 0 : 20;
           count = 0;
           maxInCircle = maxInCircle + 6;
           updatedDistance += distanceBetweenSpheres;
