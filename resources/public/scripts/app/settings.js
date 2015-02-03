@@ -6,6 +6,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var excludeFieldKey = "excludeField";
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
+  var playBrokenBuildSoundKey = "playBrokenBuildSound";
 
   var settings = $('#config-interface');
   var filterField = $('#filter-field');
@@ -14,6 +15,8 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var repulsionFactorField = $('#repulsion-factor');
   var attractionFactorField = $('#attraction-factor');
   var preferencesField = $('#preferences');
+  var rotateNonGreenTextField = $('#rotate-non-green-text');
+  var playBrokenBuildSoundField = $('#play-broken-build-sound');
 
   function ccTrayUrlFromStorage() {
     return localStorage.getItem(cctrayUrlKey);
@@ -155,16 +158,31 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   function rotateNonGreenTextSetup() {
     if (localStorage.getItem(rotateNonGreenTextKey) === 'off') {
-      $('#rotate-non-green-text').prop('checked', false)
+      rotateNonGreenTextField.prop('checked', false)
     } else {
       localStorage.setItem(rotateNonGreenTextKey, 'on');
-      $('#rotate-non-green-text').prop('checked', true);
+      rotateNonGreenTextField.prop('checked', true);
     }
 
-    $('#rotate-non-green-text').click(function () {
-      var checked = $('#rotate-non-green-text').is(':checked');
+    rotateNonGreenTextField.click(function () {
+      var checked = rotateNonGreenTextField.is(':checked');
       localStorage.setItem(rotateNonGreenTextKey, checked ? 'on' : 'off');
     });
+  }
+
+  function soundsSetup() {
+    if (localStorage.getItem(playBrokenBuildSoundKey) === 'off') {
+      playBrokenBuildSoundField.prop('checked', false)
+    } else {
+      localStorage.setItem(playBrokenBuildSoundKey, 'on');
+      playBrokenBuildSoundField.prop('checked', true);
+    }
+
+    playBrokenBuildSoundField.click(function () {
+      var checked = playBrokenBuildSoundField.is(':checked');
+      localStorage.setItem(playBrokenBuildSoundKey, checked ? 'on' : 'off');
+    });
+
   }
 
   function showSettingsView() {
@@ -187,6 +205,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   fetchPipelinesBtnSetup();
   rotateNonGreenTextSetup();
+  soundsSetup();
 
 
   return {
@@ -199,7 +218,10 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     },
     show: showSettingsView,
     repulsionFactor: getRepulsionFactorFromStorage,
-    attractionFactor: getAttractionFactorFromStorage
+    attractionFactor: getAttractionFactorFromStorage,
+    playBrokenBuildSoundEnabled: function () {
+      return localStorage.getItem(playBrokenBuildSoundKey) === 'on';
+    }
 
   }
 

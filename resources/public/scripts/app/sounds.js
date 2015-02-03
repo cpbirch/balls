@@ -1,11 +1,14 @@
-define(function() {
+define(["settings"], function(settings) {
 
   var previousBuilding = [];
 
-  var breakingBuildAudio = document.getElementById("build-breaking-sounds");
-  breakingBuildAudio.setAttribute("src", '/sounds/mario_dies.wav')
+  var breakingBuildAudio = document.getElementById("build-breaking-audio");
 
   function playBrokenBuildSound() {
+    if (!settings.playBrokenBuildSoundEnabled()) {
+      return;
+    }
+
     breakingBuildAudio.setAttribute("autoplay", 'autoplay')
     breakingBuildAudio.play();
   }

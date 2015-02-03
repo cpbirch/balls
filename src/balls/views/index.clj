@@ -26,10 +26,13 @@
 
                [:div {:id "container"}]
 
-               [:audio {:id "build-breaking-sounds"}]
-
 
                [:div {:id "preferences"}
+                [:input {:type "checkbox" :id "play-broken-build-sound" :checked "checked"}]
+                [:label "play sound when build breaks"]
+
+                [:br]
+
                 [:input {:type "checkbox" :id "rotate-non-green-text" :checked "checked"}]
                 [:label "rotate non-green pipeline names"]
 
@@ -42,6 +45,8 @@
 
                 [:label "attraction"]
                 [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]]
+
+               [:audio {:id "build-breaking-audio" :src "/sounds/mario_dies.wav"}]
 
                [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}]))
 
