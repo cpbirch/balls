@@ -146,3 +146,7 @@ body {
   border:1px solid lightgray;
   overflow:auto;
 }
+
+.hidden {
+  display: none;
+}

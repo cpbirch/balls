@@ -99,7 +99,6 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
         updatedCameraZLocation += groups.length == 1 ? 0 : 7;
 
         if (count === maxInCircle) {
-          //updatedCameraZLocation += groups.length == 1 ? 0 : 20;
           count = 0;
           maxInCircle = maxInCircle + 6;
           updatedDistance += distanceBetweenSpheres;
