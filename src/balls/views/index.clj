@@ -15,6 +15,7 @@
 
    [:div {:id "selected-pipelines"}]
 
+   [:input {:type "button" :id "settings-reset-btn" :value "reset"}]
    [:input {:type "button" :id "settings-save-btn" :value "save"}]
    [:input {:type "button" :id "settings-close-btn" :value "close"}]])
 

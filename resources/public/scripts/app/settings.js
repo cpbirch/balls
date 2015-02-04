@@ -8,6 +8,12 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var attractionFactorKey = "attractionFactor";
   var playBrokenBuildSoundKey = "playBrokenBuildSound";
 
+  var allStorageKeys = [
+    cctrayUrlKey, rotateNonGreenTextKey, filterFieldKey,
+    excludeFieldKey, repulsionFactorKey, attractionFactorKey,
+    playBrokenBuildSoundKey
+  ];
+
   var settings = $('#config-interface');
   var filterField = $('#filter-field');
   var excludeField = $('#exclude-field');
@@ -23,6 +29,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var configBtn = $('#config');
   var pipelinesFetchBtn = $('#ci-url-fetch-btn');
   var settingsSaveBtn = $('#settings-save-btn');
+  var settingsResetBtn = $('#settings-reset-btn');
 
   function fromStore(key) {
     return localStorage.getItem(key);
@@ -111,6 +118,14 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
     bindClickEvent(rotateNonGreenTextField, function () {
       store(rotateNonGreenTextKey, checkedToStoreVal(rotateNonGreenTextField));
+    });
+
+    bindClickEvent(settingsResetBtn, function() {
+      allStorageKeys.forEach(function(key) {
+        localStorage.removeItem(key);
+      });
+
+      location.reload();
     });
 
     bindClickEvent(settingsSaveBtn, function () {

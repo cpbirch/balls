@@ -65,10 +65,15 @@ input[type='range'] {
 
 #ci-url-fetch-btn,
 #settings-close-btn,
-#settings-save-btn {
+#settings-save-btn,
+#settings-reset-btn{
   width: 15%;
   position: absolute;
   background-color: rgba(0, 127, 127, 0.262745);
+}
+
+#settings-reset-btn {
+  left: 15px;
 }
 
 #settings-close-btn {
@@ -81,7 +86,8 @@ input[type='range'] {
 }
 
 #settings-close-btn,
-#settings-save-btn{
+#settings-save-btn,
+#settings-reset-btn{
   bottom: 15px;
 }
 
