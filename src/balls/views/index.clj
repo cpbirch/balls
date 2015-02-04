@@ -1,53 +1,64 @@
 (ns balls.views.index
-  (:require [balls.views.layout :refer [view-layout]])
+  (:require [balls.views.layout :refer [view-layout]]
+            [balls.config :refer [config]])
   (:use [hiccup.core]))
 
 (def title "Balls!!")
 
+(defn- config-section [{:keys [cctray-url include exclude]}]
+  [:div {:id "config-interface"}
+   [:input {:type "text" :placeholder "cc-tray url" :id "ci-url-text" :value cctray-url}]
+   [:input {:type "button" :id "ci-url-fetch-btn" :value "fetch"}]
+
+   [:input {:type "text" :id "filter-field" :placeholder "filter projects." :value include}]
+   [:input {:type "text" :id "exclude-field" :placeholder "exclude projects." :value exclude}]
+
+   [:div {:id "selected-pipelines"}]
+
+   [:input {:type "button" :id "settings-save-btn" :value "save"}]
+   [:input {:type "button" :id "settings-close-btn" :value "close"}]])
+
+(defn- preferences-section []
+  [:div {:id "preferences"}
+   [:input {:type "checkbox" :id "play-broken-build-sound" :checked "checked"}]
+   [:label "play sound when build breaks"]
+
+   [:br]
+
+   [:input {:type "checkbox" :id "rotate-non-green-text" :checked "checked"}]
+   [:label "rotate non-green pipeline names"]
+
+   [:br]
+
+   [:label "repulsion"]
+   [:input {:type "range" :id "repulsion-factor" :min "1" :max "10" :value "1" :step "1"}]
+
+   [:br]
+
+   [:label "attraction"]
+   [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]])
+
+(defn- audio-section []
+  [:audio {:id "build-breaking-audio" :src "/sounds/wario_ah_hahaha_wonderful.wav"}])
+
 (defn contents []
-  (view-layout title
-               [:div {:id "interface"}
-                [:button {:id "config"} "config"]]
+  (let [c (config)]
 
-               [:div {:id "config-interface"}
-                [:input {:type "text" :placeholder "cc-tray url" :id "ci-url-text" :value ""}]
-                [:input {:type "button" :id "ci-url-fetch-btn" :value "fetch"}]
+    (view-layout title
+                 [:div {:id "interface"}
+                  [:button {:id "config"} "config"]]
 
-                [:input {:type "text" :id "filter-field" :placeholder "filter projects." :value ".*"}]
-                [:input {:type "text" :id "exclude-field" :placeholder "exclude projects." :value ""}]
+                 (config-section c)
 
-                [:div {:id "selected-pipelines"}]
+                 [:div {:id "preferences-control"}
+                  [:button {:id "preferences-control-btn"} "controls"]]
 
-                [:input {:type "button" :id "settings-save-btn" :value "save"}]
-                [:input {:type "button" :id "settings-close-btn" :value "close"}]]
+                 [:div {:id "container"}]
 
-               [:div {:id "preferences-control"}
-                [:button {:id "preferences-control-btn"} "controls"]]
+                 (preferences-section)
 
-               [:div {:id "container"}]
+                 (audio-section)
 
-
-               [:div {:id "preferences"}
-                [:input {:type "checkbox" :id "play-broken-build-sound" :checked "checked"}]
-                [:label "play sound when build breaks"]
-
-                [:br]
-
-                [:input {:type "checkbox" :id "rotate-non-green-text" :checked "checked"}]
-                [:label "rotate non-green pipeline names"]
-
-                [:br]
-
-                [:label "repulsion"]
-                [:input {:type "range" :id "repulsion-factor" :min "1" :max "10" :value "1" :step "1"}]
-
-                [:br]
-
-                [:label "attraction"]
-                [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]]
-
-               [:audio {:id "build-breaking-audio" :src "/sounds/wario_ah_hahaha_wonderful.wav"}]
-
-               [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}]))
+                 [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}])))
 
 

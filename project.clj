@@ -7,7 +7,8 @@
                  [compojure "1.1.5"]
                  [hiccup "1.0.4"]
                  [clj-cctray "0.8.0"]
-                 [ring/ring-json "0.3.1"]]
+                 [ring/ring-json "0.3.1"]
+                 [org.clojure/data.json "0.2.5"]]
 
   :profiles {:dev {:dependencies [[midje "1.6.3"]]
                    :plugins [[lein-midje "3.1.3"]]}}

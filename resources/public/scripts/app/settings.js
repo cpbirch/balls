@@ -17,88 +17,144 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var preferencesField = $('#preferences');
   var rotateNonGreenTextField = $('#rotate-non-green-text');
   var playBrokenBuildSoundField = $('#play-broken-build-sound');
+  var cctrayField = $('#ci-url-text');
+  var preferencesControlBtn = $('#preferences-control-btn');
+  var settingsCloseBtn = $('#settings-close-btn');
+  var configBtn = $('#config');
+  var pipelinesFetchBtn = $('#ci-url-fetch-btn');
+  var settingsSaveBtn = $('#settings-save-btn');
 
-  function ccTrayUrlFromStorage() {
-    return localStorage.getItem(cctrayUrlKey);
+  function fromStore(key) {
+    return localStorage.getItem(key);
   }
 
-  function cctrayUrlFromUI() {
-    return $('#ci-url-text').val();
+  function store(key, val) {
+    localStorage.setItem(key, val);
   }
 
-  function focusOnCCTrayUrlTextfield() {
-    $('#ci-url-text').focus();
+  function checkedToStoreVal(jqElm) {
+    return jqElm.is(':checked') ? 'on' : 'off';
   }
 
-  function filterCriteriaFromStorage() {
-    var v = localStorage.getItem(filterFieldKey);
-    return _.isEmpty(v) ? ".*" : v;
+  function getFilterCriteria() {
+    return fromStore(filterFieldKey) || filterField.val();
   }
 
-  function excludeCriteriaFromStorage() {
-    return localStorage.getItem(excludeFieldKey) || "";
+  function getExcludeCriteria() {
+    return fromStore(excludeFieldKey) || excludeField.val();
   }
 
-  filterField.val(filterCriteriaFromStorage())
+  function getccTrayUrl() {
+    var val = fromStore(cctrayUrlKey) || cctrayField.val().trim();
 
-  excludeField.val(excludeCriteriaFromStorage())
+    if (!_.isEmpty(val)) {
+      return val;
+    }
+  }
 
-  function getRepulsionFactorFromStorage() {
-    var v = localStorage.getItem(repulsionFactorKey);
+  function getRepulsionFactor() {
+    var v = fromStore(repulsionFactorKey);
     return v ? parseInt(v) : 1;
   }
 
-  function getAttractionFactorFromStorage() {
-    var v = localStorage.getItem(attractionFactorKey);
+  function getAttractionFactor() {
+    var v = fromStore(attractionFactorKey);
     return v ? parseInt(v) / 100 : 0.01;
   }
 
-  $('#preferences-control-btn').click(function (e) {
-    e.preventDefault();
-    settings.hide(150);
-    preferencesField.toggle(250);
-  });
+  function focusOnCCTrayUrlTextfield() {
+    cctrayField.focus();
+  }
 
-  $('#settings-close-btn').click(function (e) {
-    e.preventDefault();
-    settings.hide();
-  });
+  function bindEvents() {
+
+    var bindEvent = function(event, jqElm, cb) {
+      jqElm.bind(event, function (e) {
+        e.preventDefault();
+        cb();
+      })
+    };
+
+    var bindClickEvent = function(jqElm, cb) {
+      bindEvent('click', jqElm, cb);
+    };
+
+    bindClickEvent(preferencesControlBtn, function () {
+      settings.hide(150);
+      preferencesField.toggle(250);
+    });
+
+    bindClickEvent(settingsCloseBtn, function () {
+      settings.hide();
+    });
+
+    bindClickEvent(configBtn, showSettingsView);
+
+    bindEvent('change mousemove', repulsionFactorField, function () {
+      store(repulsionFactorKey, repulsionFactorField.val());
+    });
+
+    bindEvent('change mousemove', attractionFactorField, function () {
+      store(attractionFactorKey, attractionFactorField.val());
+    });
+
+    bindEvent('keyup', filterField, $.debounce(searchNames, 300));
+    bindEvent('keyup', excludeField, $.debounce(searchNames, 300));
+
+    bindClickEvent(pipelinesFetchBtn, function() {
+      showPipelinesToSelect(cctrayField.val(), filterField.val(), excludeField.val()).fail(onFail);
+    });
+
+    bindClickEvent(playBrokenBuildSoundField, function () {
+      store(playBrokenBuildSoundKey, checkedToStoreVal(playBrokenBuildSoundField));
+    });
+
+    bindClickEvent(rotateNonGreenTextField, function () {
+      store(rotateNonGreenTextKey, checkedToStoreVal(rotateNonGreenTextField));
+    });
+
+    bindClickEvent(settingsSaveBtn, function () {
+      store(filterFieldKey, filterField.val().trim());
+      store(excludeFieldKey, excludeField.val().trim());
+      store(cctrayUrlKey, cctrayField.val());
+      store(rotateNonGreenTextKey, checkedToStoreVal(rotateNonGreenTextField));
+
+      settings.hide();
+
+      location.reload();
+    });
+
+  }
+
+  function setFieldValues() {
+
+    var setVal = function(storageKey, field) {
+      var valFromStorage = fromStore(storageKey);
 
 
-  $('#config').click(function (e) {
-    e.preventDefault();
-    showSettingsView();
-  });
 
+      if (!_.isEmpty(valFromStorage)) {
+        field.val(valFromStorage);
+      } else {
+        store(storageKey, field.val().trim())
+      }
+    };
 
-  repulsionFactorField.val(getRepulsionFactorFromStorage());
+    setVal(cctrayUrlKey, cctrayField);
+    setVal(filterFieldKey, filterField);
+    setVal(excludeFieldKey, excludeField);
 
-  attractionFactorField.val(getAttractionFactorFromStorage() * 100);
+    repulsionFactorField.val(getRepulsionFactor());
+    attractionFactorField.val(getAttractionFactor() * 100);
 
-  repulsionFactorField.on("change mousemove", function () {
-    localStorage.setItem(repulsionFactorKey, repulsionFactorField.val())
-  });
+    if (fromStore(rotateNonGreenTextKey) === 'off') {
+      rotateNonGreenTextField.prop('checked', false)
+    }
 
-  attractionFactorField.on("change mousemove", function () {
-    localStorage.setItem(attractionFactorKey, attractionFactorField.val())
-  });
-
-
-  $('#settings-save-btn').click(function (e) {
-    e.preventDefault();
-
-    localStorage.setItem(filterFieldKey, filterField.val().trim());
-    localStorage.setItem(excludeFieldKey, excludeField.val().trim());
-
-    localStorage.setItem(cctrayUrlKey, cctrayUrlFromUI());
-
-    var checked = $('#rotate-non-green-text').is(':checked');
-    localStorage.setItem(rotateNonGreenTextKey, checked ? 'on' : 'off');
-
-    settings.hide();
-
-    location.reload();
-  });
+    if (fromStore(playBrokenBuildSoundKey) === 'off') {
+      playBrokenBuildSoundField.prop('checked', false)
+    }
+  }
 
   function showFilteredList(names) {
 
@@ -108,26 +164,25 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       return;
     }
 
-    names.sort().forEach(function (n) {
-      selectedPipelinesField.append('<label class="pipeline">' + n + '</label>')
-    });
+    var appendName = function(name) {
+      selectedPipelinesField.append('<label class="pipeline">' + name + '</label>')
+    };
+
+    names.sort().forEach(appendName);
 
     selectedPipelinesField.show(250);
   }
 
   function searchNames() {
 
-    var cctrayUrl = cctrayUrlFromUI();
+    var cctrayUrl = cctrayField.val();
+
     if (_.isEmpty(cctrayUrl)) {
       return;
     }
 
     showPipelinesToSelect(cctrayUrl, filterField.val().trim(), excludeField.val().trim());
   }
-
-
-  filterField.on('keyup', $.debounce(searchNames, 300));
-  excludeField.on('keyup', $.debounce(searchNames, 300));
 
   function showPipelinesToSelect(cctrayUrl, filterCriteria, excludeCriteria) {
     return repo.filteredPipelinesNames(cctrayUrl, filterCriteria, excludeCriteria)
@@ -144,55 +199,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     selectedPipelinesField.hide();
   }
 
-
-  function fetchPipelinesBtnSetup() {
-    $('#ci-url-fetch-btn').click(function (e) {
-      e.preventDefault();
-
-      var cctrayUrl = cctrayUrlFromUI();
-      showPipelinesToSelect(cctrayUrl)
-        .fail(onFail);
-    });
-  }
-
-
-  function rotateNonGreenTextSetup() {
-    if (localStorage.getItem(rotateNonGreenTextKey) === 'off') {
-      rotateNonGreenTextField.prop('checked', false)
-    } else {
-      localStorage.setItem(rotateNonGreenTextKey, 'on');
-      rotateNonGreenTextField.prop('checked', true);
-    }
-
-    rotateNonGreenTextField.click(function () {
-      var checked = rotateNonGreenTextField.is(':checked');
-      localStorage.setItem(rotateNonGreenTextKey, checked ? 'on' : 'off');
-    });
-  }
-
-  function soundsSetup() {
-    if (localStorage.getItem(playBrokenBuildSoundKey) === 'off') {
-      playBrokenBuildSoundField.prop('checked', false)
-    } else {
-      localStorage.setItem(playBrokenBuildSoundKey, 'on');
-      playBrokenBuildSoundField.prop('checked', true);
-    }
-
-    playBrokenBuildSoundField.click(function () {
-      var checked = playBrokenBuildSoundField.is(':checked');
-      localStorage.setItem(playBrokenBuildSoundKey, checked ? 'on' : 'off');
-    });
-
-  }
-
   function showSettingsView() {
     preferencesField.hide(250);
 
-    var cctrayUrl = localStorage.getItem(cctrayUrlKey);
+    var cctrayUrl = getccTrayUrl();
 
     if (cctrayUrl) {
-      $('#ci-url-text').val(localStorage.getItem(cctrayUrlKey));
-      showPipelinesToSelect(cctrayUrl, filterCriteriaFromStorage(), excludeCriteriaFromStorage())
+      showPipelinesToSelect(cctrayUrl, getFilterCriteria(), getExcludeCriteria())
         .then(settings.show(200))
         .fail(function () {
           settings.show(onFail);
@@ -203,24 +216,26 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     }
   }
 
-  fetchPipelinesBtnSetup();
-  rotateNonGreenTextSetup();
-  soundsSetup();
+  setFieldValues();
+  bindEvents();
 
 
   return {
-    rotateNonGreenText: function () {
-      return localStorage.getItem(rotateNonGreenTextKey) === 'on';
-    },
-    cctrayUrl: ccTrayUrlFromStorage,
-    pipelines: function () {
-      return repo.pipelines(ccTrayUrlFromStorage(), filterCriteriaFromStorage(), excludeCriteriaFromStorage());
-    },
+    cctrayUrl: function() { return fromStore(cctrayUrlKey); },
     show: showSettingsView,
-    repulsionFactor: getRepulsionFactorFromStorage,
-    attractionFactor: getAttractionFactorFromStorage,
+    repulsionFactor: getRepulsionFactor,
+    attractionFactor: getAttractionFactor,
+
+    rotateNonGreenText: function () {
+      return fromStore(rotateNonGreenTextKey) === 'on';
+    },
+
+    pipelines: function () {
+      return repo.pipelines(fromStore(cctrayUrlKey), fromStore(filterFieldKey), fromStore(excludeFieldKey));
+    },
+
     playBrokenBuildSoundEnabled: function () {
-      return localStorage.getItem(playBrokenBuildSoundKey) === 'on';
+      return fromStore((playBrokenBuildSoundKey)) === 'on';
     }
 
   }
