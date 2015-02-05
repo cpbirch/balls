@@ -24,6 +24,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var rotateNonGreenTextField = $('#rotate-non-green-text');
   var playBrokenBuildSoundField = $('#play-broken-build-sound');
   var cctrayField = $('#ci-url-text');
+  var cctrayReadOnlyField = $('#ci-url-label');
   var preferencesControlBtn = $('#preferences-control-btn');
   var settingsCloseBtn = $('#settings-close-btn');
   var configBtn = $('#config');
@@ -31,8 +32,16 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var settingsSaveBtn = $('#settings-save-btn');
   var settingsResetBtn = $('#settings-reset-btn');
 
+  function nullForEmpty(val) {
+    return _.isEmpty(val) ? null : val;
+  }
+
   function fromStore(key) {
     return localStorage.getItem(key);
+  }
+
+  function removeFromStore(key) {
+    localStorage.removeItem(key);
   }
 
   function store(key, val) {
@@ -51,8 +60,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     return fromStore(excludeFieldKey) || excludeField.val();
   }
 
+  function cctrayFieldValFromUI() {
+    return nullForEmpty(cctrayReadOnlyField.text().trim()) || nullForEmpty(cctrayField.val().trim());
+  }
+
+
   function getccTrayUrl() {
-    var val = fromStore(cctrayUrlKey) || cctrayField.val().trim();
+    var val = nullForEmpty(fromStore(cctrayUrlKey)) || cctrayFieldValFromUI();
 
     if (!_.isEmpty(val)) {
       return val;
@@ -121,7 +135,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
     bindClickEvent(settingsResetBtn, function() {
       allStorageKeys.forEach(function(key) {
-        localStorage.removeItem(key);
+        removeFromStore(key);
       });
 
       location.reload();
@@ -130,14 +144,16 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     bindClickEvent(settingsSaveBtn, function () {
       store(filterFieldKey, filterField.val().trim());
       store(excludeFieldKey, excludeField.val().trim());
-      store(cctrayUrlKey, cctrayField.val());
+
+      if (cctrayField.length > 0) {
+        store(cctrayUrlKey, cctrayField.val());
+      }
+
       store(rotateNonGreenTextKey, checkedToStoreVal(rotateNonGreenTextField));
 
       settings.hide();
-
       location.reload();
     });
-
   }
 
   function setFieldValues() {
@@ -152,33 +168,41 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       }
     };
 
-    setVal(cctrayUrlKey, cctrayField);
-    setVal(filterFieldKey, filterField);
-    setVal(excludeFieldKey, excludeField);
+    var setConfigValues = function() {
+      if (cctrayField.length == 0) {
+        removeFromStore(cctrayUrlKey);
+      } else {
+        setVal(cctrayUrlKey, cctrayField);
+      }
 
-    repulsionFactorField.val(getRepulsionFactor());
-    attractionFactorField.val(getAttractionFactor() * 100);
+      setVal(filterFieldKey, filterField);
+      setVal(excludeFieldKey, excludeField);
+    };
 
-    if (fromStore(rotateNonGreenTextKey) === 'off') {
-      rotateNonGreenTextField.prop('checked', false)
+    var setControlValues = function() {
+      repulsionFactorField.val(getRepulsionFactor());
+      attractionFactorField.val(getAttractionFactor() * 100);
+
+      if (fromStore(rotateNonGreenTextKey) === 'off') {
+        rotateNonGreenTextField.prop('checked', false)
+      }
+
+      if (fromStore(playBrokenBuildSoundKey) === 'off') {
+        playBrokenBuildSoundField.prop('checked', false)
+      }
     }
 
-    if (fromStore(playBrokenBuildSoundKey) === 'off') {
-      playBrokenBuildSoundField.prop('checked', false)
-    }
+    setConfigValues();
+    setControlValues();
   }
 
   function showFilteredList(names) {
 
     selectedPipelinesField.html('')
 
-    if (_.isEmpty(names)) {
-      return;
-    }
+    if (_.isEmpty(names)) { return; }
 
-    var appendName = function(name) {
-      selectedPipelinesField.append('<label class="pipeline">' + name + '</label>')
-    };
+    var appendName = function(name) { selectedPipelinesField.append('<label class="pipeline">' + name + '</label>') };
 
     names.sort().forEach(appendName);
 
@@ -187,7 +211,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
   function searchNames() {
 
-    var cctrayUrl = cctrayField.val();
+    var cctrayUrl = cctrayFieldValFromUI();
 
     if (_.isEmpty(cctrayUrl)) {
       return;
@@ -228,12 +252,16 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     }
   }
 
+  function cctrayUrlForMainView() {
+    return fromStore(cctrayUrlKey) || cctrayReadOnlyField.text().trim();
+  }
+
   setFieldValues();
   bindEvents();
 
 
   return {
-    cctrayUrl: function() { return fromStore(cctrayUrlKey); },
+    cctrayUrl: cctrayUrlForMainView,
     show: showSettingsView,
     repulsionFactor: getRepulsionFactor,
     attractionFactor: getAttractionFactor,
@@ -243,7 +271,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     },
 
     pipelines: function () {
-      return repo.pipelines(fromStore(cctrayUrlKey), fromStore(filterFieldKey), fromStore(excludeFieldKey));
+      return repo.pipelines(cctrayUrlForMainView(), fromStore(filterFieldKey), fromStore(excludeFieldKey));
     },
 
     playBrokenBuildSoundEnabled: function () {

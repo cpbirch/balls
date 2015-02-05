@@ -5,13 +5,27 @@
 
 (def title "Balls!!")
 
+(defn- cctray-input-field []
+  [:div
+   [:input {:type "text" :placeholder "cc-tray url" :id "ci-url-text" :value ""}]
+   [:input {:type "button" :id "ci-url-fetch-btn" :value "fetch"}]])
+
+
+(defn- cctray-read-only-field [cctray-url]
+  [:label {:id "ci-url-label" :value cctray-url} cctray-url])
+
+(defn- cctray-field [cctray-url]
+  (if (empty? cctray-url)
+    (cctray-input-field)
+    (cctray-read-only-field cctray-url)))
+
 (defn- config-section [{:keys [cctray-url include exclude]}]
   [:div {:id "config-interface"}
-   [:input {:type "text" :placeholder "cc-tray url" :id "ci-url-text" :value cctray-url}]
-   [:input {:type "button" :id "ci-url-fetch-btn" :value "fetch"}]
 
-   [:input {:type "text" :id "filter-field" :placeholder "filter projects." :value include}]
-   [:input {:type "text" :id "exclude-field" :placeholder "exclude projects." :value exclude}]
+   (cctray-field cctray-url)
+
+   [:input {:type "text" :id "filter-field" :placeholder "select projects regex." :value include}]
+   [:input {:type "text" :id "exclude-field" :placeholder "exclude projects regex." :value exclude}]
 
    [:div {:id "selected-pipelines"}]
 

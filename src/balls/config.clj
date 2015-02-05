@@ -1,7 +1,14 @@
 (ns balls.config
-  (:require [clojure.data.json :refer [read-str]]))
+  (:require [clojure.data.json :refer [read-str]]
+            [clojure.java.io :refer [as-file]]))
+
+(def config-file "resources/config/config.json")
+
+(defn- config-file-exists? []
+  (.exists (as-file config-file)))
 
 (defn config []
-  (-> "resources/config/config.json"
-      slurp
-      (read-str :key-fn keyword)))
+  (when (config-file-exists?)
+    (-> config-file
+        slurp
+        (read-str :key-fn keyword))))

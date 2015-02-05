@@ -1,0 +1,5 @@
+{
+  "cctray-url": "cctray-url",
+  "include": "regex-pattern",
+  "exclude": "regex-pattern"
+}
