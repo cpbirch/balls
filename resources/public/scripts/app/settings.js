@@ -77,7 +77,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
     var bindEvent = function(event, jqElm, cb) {
       jqElm.bind(event, function (e) {
-        e.preventDefault();
         cb();
       })
     };
@@ -145,8 +144,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
     var setVal = function(storageKey, field) {
       var valFromStorage = fromStore(storageKey);
-
-
 
       if (!_.isEmpty(valFromStorage)) {
         field.val(valFromStorage);
@@ -250,9 +247,8 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     },
 
     playBrokenBuildSoundEnabled: function () {
-      return fromStore((playBrokenBuildSoundKey)) === 'on';
+      return checkedToStoreVal(playBrokenBuildSoundField) === 'on';
     }
-
   }
 
 });

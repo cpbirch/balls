@@ -3,13 +3,13 @@ define(["settings"], function(settings) {
   var previousBuilding = [];
 
   var breakingBuildAudio = document.getElementById("build-breaking-audio");
+  breakingBuildAudio.setAttribute("autoplay", 'autoplay');
 
   function playBrokenBuildSound() {
     if (!settings.playBrokenBuildSoundEnabled()) {
       return;
     }
 
-    breakingBuildAudio.setAttribute("autoplay", 'autoplay')
     breakingBuildAudio.play();
   }
 
@@ -23,17 +23,17 @@ define(["settings"], function(settings) {
     });
   }
 
-  function updatePreviousBuilding(sickBuilding, healtyBuilding) {
+  function updatePreviousBuilding(sickBuilding, healthyBuilding) {
     sickBuilding = sickBuilding || [];
-    healtyBuilding = healtyBuilding || [];
+    healthyBuilding = healthyBuilding || [];
 
-    previousBuilding = _.pluck(sickBuilding.concat(healtyBuilding), "name");
+    previousBuilding = _.pluck(sickBuilding.concat(healthyBuilding), "name");
   }
 
-  function play(healthy, sick, sickBuilding, healtyBuilding) {
+  function play(healthy, sick, sickBuilding, healthyBuilding) {
     checkBrokenBuild(sick);
 
-    updatePreviousBuilding(sickBuilding, healtyBuilding)
+    updatePreviousBuilding(sickBuilding, healthyBuilding)
   }
 
   return {
