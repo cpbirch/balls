@@ -5,3 +5,5 @@ target/
 .lein*
 .idea/
 .nrep*
+resources/*.xml
+config.json
