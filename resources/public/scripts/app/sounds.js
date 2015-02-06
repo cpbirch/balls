@@ -1,39 +1,60 @@
 define(["settings"], function(settings) {
 
-  var previousBuilding = [];
+  var previousHealthyBuilding = [];
+  var previousSickBuilding = [];
 
-  var breakingBuildAudio = document.getElementById("build-breaking-audio");
-  breakingBuildAudio.addEventListener('ended', function() {
-    breakingBuildAudio.currentTime = 0;
-  });
+  function audioElmFor(elmId) {
+    var elm = document.getElementById(elmId);
+    elm.addEventListener('ended', function() { elm.currentTime = 0; });
+    return elm;
+  }
 
-  function playBrokenBuildSound() {
-    if (settings.playBrokenBuildSoundEnabled() && breakingBuildAudio.currentTime == 0) {
-      breakingBuildAudio.play();
+  var breakingBuildAudio = audioElmFor("build-breaking-audio");
+  var sickToHealthyAudio = audioElmFor("sick-to-healthy-audio");
+
+  function audioPlaying(audioElm) {
+    return audioElm.currentTime != 0;
+  }
+
+  function canPlay(audioElm) {
+    return settings.playBrokenBuildSoundEnabled() && !audioPlaying(audioElm)
+  }
+
+  function playSound(sound) {
+    if (canPlay(sound)) {
+      sound.play();
     }
   }
 
-  function checkBrokenBuild(sick) {
-    sick = sick || [];
-    sick.forEach(function(d) {
-      if (_.contains(previousBuilding, d.name)) {
-        playBrokenBuildSound();
+  function playSoundFor(data, compareList, sound) {
+    data.forEach(function(d) {
+      if (_.contains(compareList, d.name)) {
+        playSound(sound);
         return;
       }
-    });
+    })
+  }
+
+  function checkSickBuildingSuccess(healthy) {
+    playSoundFor(healthy, previousSickBuilding, sickToHealthyAudio);
+  }
+
+  function checkBrokenBuild(sick) {
+    var allPreviousBuilding = previousHealthyBuilding.concat(previousSickBuilding);
+
+    playSoundFor(sick, allPreviousBuilding, breakingBuildAudio);
   }
 
   function updatePreviousBuilding(sickBuilding, healthyBuilding) {
-    sickBuilding = sickBuilding || [];
-    healthyBuilding = healthyBuilding || [];
-
-    previousBuilding = _.pluck(sickBuilding.concat(healthyBuilding), "name");
+    previousHealthyBuilding = _.pluck(healthyBuilding, "name");
+    previousSickBuilding = _.pluck(sickBuilding, "name");
   }
 
   function play(healthy, sick, sickBuilding, healthyBuilding) {
-    checkBrokenBuild(sick);
+    checkSickBuildingSuccess(healthy || []);
+    checkBrokenBuild(sick || []);
 
-    updatePreviousBuilding(sickBuilding, healthyBuilding)
+    updatePreviousBuilding(sickBuilding || [], healthyBuilding || [])
   }
 
   return {

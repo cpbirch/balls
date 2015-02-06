@@ -72,6 +72,9 @@
                  [:audio {:id "build-breaking-audio" :preload "auto"}
                   [:source {:src "/sounds/wario_ah_hahaha_wonderful.wav" :type "audio/wav"}]]
 
+                 [:audio {:id "sick-to-healthy-audio" :preload "auto"}
+                  [:source {:src "/sounds/mario_woo_hoo.wav" :type "audio/wav"}]]
+
                  [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}])))
 
 
