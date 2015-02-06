@@ -3,13 +3,12 @@ define(["settings"], function(settings) {
   var previousBuilding = [];
 
   var breakingBuildAudio = document.getElementById("build-breaking-audio");
+  breakingBuildAudio.addEventListener('ended', function() {
+    breakingBuildAudio.currentTime = 0;
+  });
 
   function playBrokenBuildSound() {
-    if (!settings.playBrokenBuildSoundEnabled()) {
-      return;
-    }
-
-    if (breakingBuildAudio.paused) {
+    if (settings.playBrokenBuildSoundEnabled() && breakingBuildAudio.currentTime == 0) {
       breakingBuildAudio.play();
     }
   }
