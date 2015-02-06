@@ -13,13 +13,15 @@ A build radiator that radiates balls worth looking at.
 
 ### Setup with server side config
 
-	1. create your own config by copying config.json.sample to config.json under resources/config
+	1. Copy config.json.sample to config.json under resources/config.
+	2. Set url, include/exclude regex.
 	2. lein ring server
 	3. launch browser at port 3000.
 
-	Note: You can still do custom include/exclude from browser, just cannot override ci url.
+	Note: You can still do custom include/exclude from browser.
+	Just cannot override ci url.
 
-### Ball Colors
+### Balls Colors
 
 1. Green is good.
 2. Yellow is building.
@@ -38,7 +40,7 @@ A build radiator that radiates balls worth looking at.
 
 ### Known issues
 
-1. If webgl is not supported by browser, it will not work. Well, Balls.!!!
+1. If webgl is not supported by browser/machine, it will not work. Well, Balls!!!
 
 ### License
 
