@@ -3,14 +3,15 @@ define(["settings"], function(settings) {
   var previousBuilding = [];
 
   var breakingBuildAudio = document.getElementById("build-breaking-audio");
-  breakingBuildAudio.setAttribute("autoplay", 'autoplay');
 
   function playBrokenBuildSound() {
     if (!settings.playBrokenBuildSoundEnabled()) {
       return;
     }
 
-    breakingBuildAudio.play();
+    if (breakingBuildAudio.paused) {
+      breakingBuildAudio.play();
+    }
   }
 
   function checkBrokenBuild(sick) {

@@ -25,7 +25,7 @@
    (cctray-field cctray-url)
 
    [:input {:type "text" :id "filter-field" :placeholder "select projects regex." :value include}]
-   [:input {:type "text" :id "exclude-field" :placeholder "exclude projects regex." :value exclude}]
+   [:input {:type "text" :id "exclude-field" :placeholder "exclude projects." :value exclude}]
 
    [:div {:id "selected-pipelines"}]
 
@@ -53,9 +53,6 @@
    [:label "attraction"]
    [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]])
 
-(defn- audio-section []
-  [:audio {:id "build-breaking-audio" :src "/sounds/wario_ah_hahaha_wonderful.wav"}])
-
 (defn contents []
   (let [c (config)]
 
@@ -72,7 +69,8 @@
 
                  (preferences-section)
 
-                 (audio-section)
+                 [:audio {:id "build-breaking-audio" :preload "auto"}
+                  [:source {:src "/sounds/wario_ah_hahaha_wonderful.wav" :type "audio/wav"}]]
 
                  [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}])))
 

@@ -275,7 +275,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     },
 
     playBrokenBuildSoundEnabled: function () {
-      return checkedToStoreVal(playBrokenBuildSoundField) === 'on';
+      return playBrokenBuildSoundField.is(':checked');
     }
   }
 
