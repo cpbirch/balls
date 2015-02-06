@@ -44,10 +44,10 @@ A build radiator that radiates balls worth looking at.
 
 Distributed under the Eclipse Public License.
 
-### About
+### One more thing
 
 I don't know anything about licenses.
-You clone it, you own it, they become your Balls then.
+You clone it, you own it, they become your Balls.
 I am not responsible.
 
 ![Green balls](docs/all-green-balls.png)
