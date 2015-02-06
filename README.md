@@ -5,7 +5,7 @@ A build radiator that radiates balls worth looking at.
 ### Setup without server side config
 
 	1. lein ring server
-	2. launch browser at port 3000
+	2. launch browser at <hostname>:3000
 	3. Setup config right there.
 
 	You just need one server running.
@@ -16,7 +16,7 @@ A build radiator that radiates balls worth looking at.
 	1. Copy config.json.sample to config.json under resources/config.
 	2. Set url, include/exclude regex.
 	2. lein ring server
-	3. launch browser at port 3000.
+	3. launch browser at <hostname>:3000
 
 	Note: You can still do custom include/exclude from browser.
 	Just cannot override ci url.
