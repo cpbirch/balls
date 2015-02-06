@@ -8,8 +8,7 @@ A build radiator that radiates balls worth looking at.
 	2. launch browser at <hostname>:3000
 	3. Setup config right there.
 
-	You just need one server running.
-	Different teams can have their Balls pointing to their own CI server.
+	Different teams can have their Balls pointing to their own CI server via browser config.
 
 ### Setup with server side config
 
@@ -19,7 +18,7 @@ A build radiator that radiates balls worth looking at.
 	3. launch browser at <hostname>:3000
 
 	Note: You can still do custom include/exclude from browser.
-	Just cannot override ci url.
+	All teams using will have their Balls pointing to the same CI server.
 
 ### Balls Colors
 
