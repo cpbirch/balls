@@ -40,7 +40,9 @@ A build radiator that radiates balls worth looking at.
 
 ### Known issues
 
-1. If webgl is not supported by browser/machine, it will not work. Well, Balls!!!
+1. If webgl is not supported by browser/machine, it will not work.
+   Use [nevergreen](https://github.com/build-canaries/nevergreen) radiator.
+   You just won't have any Balls.
 
 ### License
 
