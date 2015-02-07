@@ -7,11 +7,12 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
   var playBrokenBuildSoundKey = "playBrokenBuildSound";
+  var playSickToHealthySoundKey = "playSickToHealthyBuildSound";
 
   var allStorageKeys = [
     cctrayUrlKey, rotateNonGreenTextKey, filterFieldKey,
     excludeFieldKey, repulsionFactorKey, attractionFactorKey,
-    playBrokenBuildSoundKey
+    playBrokenBuildSoundKey, playSickToHealthySoundKey
   ];
 
   var settings = $('#config-interface');
@@ -21,8 +22,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var repulsionFactorField = $('#repulsion-factor');
   var attractionFactorField = $('#attraction-factor');
   var preferencesField = $('#preferences');
-  var rotateNonGreenTextField = $('#rotate-non-green-text');
-  var playBrokenBuildSoundField = $('#play-broken-build-sound');
   var cctrayField = $('#ci-url-text');
   var cctrayReadOnlyField = $('#ci-url-label');
   var preferencesControlBtn = $('#preferences-control-btn');
@@ -32,45 +31,34 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
   var settingsSaveBtn = $('#settings-save-btn');
   var settingsResetBtn = $('#settings-reset-btn');
 
-  function nullForEmpty(val) {
-    return _.isEmpty(val) ? null : val;
-  }
+  var checkedPreferences = {};
 
-  function fromStore(key) {
-    return localStorage.getItem(key);
-  }
+  checkedPreferences[playBrokenBuildSoundKey] = $('#play-broken-build-sound');
+  checkedPreferences[playSickToHealthySoundKey] = $('#play-sick-to-healthy-build-sound');
+  checkedPreferences[rotateNonGreenTextKey] = $('#rotate-non-green-text');
 
-  function removeFromStore(key) {
-    localStorage.removeItem(key);
-  }
+  function nullForEmpty(val) { return _.isEmpty(val) ? null : val; }
 
-  function store(key, val) {
-    localStorage.setItem(key, val);
-  }
+  function fromStore(key) { return localStorage.getItem(key); }
 
-  function checkedToStoreVal(jqElm) {
-    return jqElm.is(':checked') ? 'on' : 'off';
-  }
+  function removeFromStore(key) { localStorage.removeItem(key); }
 
-  function getFilterCriteria() {
-    return fromStore(filterFieldKey) || filterField.val();
-  }
+  function store(key, val) { localStorage.setItem(key, val); }
 
-  function getExcludeCriteria() {
-    return fromStore(excludeFieldKey) || excludeField.val();
-  }
+  function checkedToStoreVal(jqElm) { return jqElm.is(':checked') ? 'on' : 'off'; }
+
+  function getFilterCriteria() { return fromStore(filterFieldKey) || filterField.val(); }
+
+  function getExcludeCriteria() { return fromStore(excludeFieldKey) || excludeField.val(); }
 
   function cctrayFieldValFromUI() {
     return nullForEmpty(cctrayReadOnlyField.text().trim()) || nullForEmpty(cctrayField.val().trim());
   }
 
-
   function getccTrayUrl() {
     var val = nullForEmpty(fromStore(cctrayUrlKey)) || cctrayFieldValFromUI();
 
-    if (!_.isEmpty(val)) {
-      return val;
-    }
+    if (!_.isEmpty(val)) { return val; }
   }
 
   function getRepulsionFactor() {
@@ -83,9 +71,7 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     return v ? parseInt(v) / 100 : 0.01;
   }
 
-  function focusOnCCTrayUrlTextfield() {
-    cctrayField.focus();
-  }
+  function focusOnCCTrayUrlTextfield() { cctrayField.focus(); }
 
   function bindEvents() {
 
@@ -125,12 +111,10 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       showPipelinesToSelect(cctrayField.val(), filterField.val(), excludeField.val()).fail(onFail);
     });
 
-    bindClickEvent(playBrokenBuildSoundField, function () {
-      store(playBrokenBuildSoundKey, checkedToStoreVal(playBrokenBuildSoundField));
-    });
-
-    bindClickEvent(rotateNonGreenTextField, function () {
-      store(rotateNonGreenTextKey, checkedToStoreVal(rotateNonGreenTextField));
+    _.each(checkedPreferences, function(field, storeKey) {
+        bindClickEvent(field, function () {
+          store(storeKey, checkedToStoreVal(field));
+        });
     });
 
     bindClickEvent(settingsResetBtn, function() {
@@ -148,8 +132,6 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       if (cctrayField.length > 0) {
         store(cctrayUrlKey, cctrayField.val());
       }
-
-      store(rotateNonGreenTextKey, checkedToStoreVal(rotateNonGreenTextField));
 
       settings.hide();
       location.reload();
@@ -183,14 +165,12 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
       repulsionFactorField.val(getRepulsionFactor());
       attractionFactorField.val(getAttractionFactor() * 100);
 
-      if (fromStore(rotateNonGreenTextKey) === 'off') {
-        rotateNonGreenTextField.prop('checked', false)
-      }
-
-      if (fromStore(playBrokenBuildSoundKey) === 'off') {
-        playBrokenBuildSoundField.prop('checked', false)
-      }
-    }
+      _.each(checkedPreferences, function(field, storeKey) {
+          if (fromStore(storeKey) === 'off') {
+            field.prop('checked', false);
+          }
+        });
+    };
 
     setConfigValues();
     setControlValues();
@@ -256,6 +236,10 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     return fromStore(cctrayUrlKey) || cctrayReadOnlyField.text().trim();
   }
 
+  function checkedPreferenceEnabled(p) {
+    return function() { return checkedPreferences[p].is(':checked') };
+  }
+
   setFieldValues();
   bindEvents();
 
@@ -266,17 +250,13 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
     repulsionFactor: getRepulsionFactor,
     attractionFactor: getAttractionFactor,
 
-    rotateNonGreenText: function () {
-      return fromStore(rotateNonGreenTextKey) === 'on';
-    },
-
     pipelines: function () {
       return repo.pipelines(cctrayUrlForMainView(), fromStore(filterFieldKey), fromStore(excludeFieldKey));
     },
 
-    playBrokenBuildSoundEnabled: function () {
-      return playBrokenBuildSoundField.is(':checked');
-    }
+    rotateNonGreenText: checkedPreferenceEnabled(rotateNonGreenTextKey),
+    playBrokenBuildSoundEnabled: checkedPreferenceEnabled(playBrokenBuildSoundKey),
+    playBrokenBuildIsHealthySoundEnabled: checkedPreferenceEnabled(playSickToHealthySoundKey)
   }
 
 });

@@ -40,6 +40,11 @@
 
    [:br]
 
+   [:input {:type "checkbox" :id "play-sick-to-healthy-build-sound" :checked "checked"}]
+   [:label "play sound when build is good after a failure"]
+
+   [:br]
+
    [:input {:type "checkbox" :id "rotate-non-green-text" :checked "checked"}]
    [:label "rotate non-green pipeline names"]
 
@@ -68,12 +73,6 @@
                  [:div {:id "container"}]
 
                  (preferences-section)
-
-                 [:audio {:id "build-breaking-audio" :preload "auto"}
-                  [:source {:src "/sounds/wario_ah_hahaha_wonderful.wav" :type "audio/wav"}]]
-
-                 [:audio {:id "sick-to-healthy-audio" :preload "auto"}
-                  [:source {:src "/sounds/mario_woo_hoo.wav" :type "audio/wav"}]]
 
                  [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}])))
 

@@ -3,21 +3,25 @@ define(["settings"], function(settings) {
   var previousHealthyBuilding = [];
   var previousSickBuilding = [];
 
-  function audioElmFor(elmId) {
-    var elm = document.getElementById(elmId);
-    elm.addEventListener('ended', function() { elm.currentTime = 0; });
-    return elm;
+  function loadAudio(path, settingsEnabledFn) {
+    var a = new Audio(path);
+    a.settingsEnabled = settingsEnabledFn;
+    a.addEventListener('ended', function() { a.currentTime = 0; });
+    return a;
   }
 
-  var breakingBuildAudio = audioElmFor("build-breaking-audio");
-  var sickToHealthyAudio = audioElmFor("sick-to-healthy-audio");
+  var audios = {
+    breakingBuildAudio: loadAudio('/sounds/wario_ah_hahaha_wonderful.wav', settings.playBrokenBuildSoundEnabled),
+    sickToHealthyAudio: loadAudio('/sounds/mario_woo_hoo.wav', settings.playBrokenBuildIsHealthySoundEnabled)
+  };
 
-  function audioPlaying(audioElm) {
-    return audioElm.currentTime != 0;
+
+  function audioPlaying(audio) {
+    return audio.currentTime != 0;
   }
 
-  function canPlay(audioElm) {
-    return settings.playBrokenBuildSoundEnabled() && !audioPlaying(audioElm)
+  function canPlay(audio) {
+    return audio.settingsEnabled() && !audioPlaying(audio)
   }
 
   function playSound(sound) {
@@ -36,13 +40,13 @@ define(["settings"], function(settings) {
   }
 
   function checkSickBuildingSuccess(healthy) {
-    playSoundFor(healthy, previousSickBuilding, sickToHealthyAudio);
+    playSoundFor(healthy, previousSickBuilding, audios.sickToHealthyAudio);
   }
 
   function checkBrokenBuild(sick) {
     var allPreviousBuilding = previousHealthyBuilding.concat(previousSickBuilding);
 
-    playSoundFor(sick, allPreviousBuilding, breakingBuildAudio);
+    playSoundFor(sick, allPreviousBuilding, audios.breakingBuildAudio);
   }
 
   function updatePreviousBuilding(sickBuilding, healthyBuilding) {
