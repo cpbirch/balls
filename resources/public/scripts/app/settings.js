@@ -1,243 +1,76 @@
-define(['repository', 'jquery', 'debounce'], function (repo) {
+define(['store', 'jquery'], function (store) {
 
-  var cctrayUrlKey = "cctrayUrl";
-  var rotateNonGreenTextKey = "rotateNonGreenText";
-  var filterFieldKey = "filterField";
-  var excludeFieldKey = "excludeField";
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
-  var playBrokenBuildSoundKey = "playBrokenBuildSound";
-  var playSickToHealthySoundKey = "playSickToHealthyBuildSound";
 
-  var allStorageKeys = [
-    cctrayUrlKey, rotateNonGreenTextKey, filterFieldKey,
-    excludeFieldKey, repulsionFactorKey, attractionFactorKey,
-    playBrokenBuildSoundKey, playSickToHealthySoundKey
-  ];
-
-  var settings = $('#config-interface');
-  var filterField = $('#filter-field');
-  var excludeField = $('#exclude-field');
-  var selectedPipelinesField = $('#selected-pipelines');
   var repulsionFactorField = $('#repulsion-factor');
   var attractionFactorField = $('#attraction-factor');
   var preferencesField = $('#preferences');
-  var cctrayField = $('#ci-url-text');
-  var cctrayReadOnlyField = $('#ci-url-label');
-  var preferencesControlBtn = $('#preferences-control-btn');
-  var settingsCloseBtn = $('#settings-close-btn');
-  var configBtn = $('#config');
-  var pipelinesFetchBtn = $('#ci-url-fetch-btn');
-  var settingsSaveBtn = $('#settings-save-btn');
-  var settingsResetBtn = $('#settings-reset-btn');
 
-  var checkedPreferences = {};
+  var soundMap = {
+    brokenBuildSound: $('#broken-build-sound-list'),
+    brokenToHealthySound: $('#sick-to-healthy-build-sound-list')
+  };
 
-  checkedPreferences[playBrokenBuildSoundKey] = $('#play-broken-build-sound');
-  checkedPreferences[playSickToHealthySoundKey] = $('#play-sick-to-healthy-build-sound');
-  checkedPreferences[rotateNonGreenTextKey] = $('#rotate-non-green-text');
-
-  function nullForEmpty(val) { return _.isEmpty(val) ? null : val; }
-
-  function fromStore(key) { return localStorage.getItem(key); }
-
-  function removeFromStore(key) { localStorage.removeItem(key); }
-
-  function store(key, val) { localStorage.setItem(key, val); }
-
-  function checkedToStoreVal(jqElm) { return jqElm.is(':checked') ? 'on' : 'off'; }
-
-  function getFilterCriteria() { return fromStore(filterFieldKey) || filterField.val(); }
-
-  function getExcludeCriteria() { return fromStore(excludeFieldKey) || excludeField.val(); }
-
-  function cctrayFieldValFromUI() {
-    return nullForEmpty(cctrayReadOnlyField.text().trim()) || nullForEmpty(cctrayField.val().trim());
+  var checkedPreferences = {
+    rotateNonGreenText: $('#rotate-non-green-text')
   }
 
-  function getccTrayUrl() {
-    var val = nullForEmpty(fromStore(cctrayUrlKey)) || cctrayFieldValFromUI();
 
-    if (!_.isEmpty(val)) { return val; }
+  function checkedToStoreVal(jqElm) {
+    return jqElm.is(':checked') ? 'on' : 'off';
   }
 
   function getRepulsionFactor() {
-    var v = fromStore(repulsionFactorKey);
+    var v = store.get(repulsionFactorKey);
     return v ? parseInt(v) : 1;
   }
 
   function getAttractionFactor() {
-    var v = fromStore(attractionFactorKey);
+    var v = store.get(attractionFactorKey);
     return v ? parseInt(v) / 100 : 0.01;
   }
 
-  function focusOnCCTrayUrlTextfield() { cctrayField.focus(); }
-
   function bindEvents() {
+    _.each(soundMap, function(field, storeKey) {
+      store.save(storeKey, field.val());
+    });
 
-    var bindEvent = function(event, jqElm, cb) {
-      jqElm.bind(event, function (e) {
-        cb();
-      })
-    };
-
-    var bindClickEvent = function(jqElm, cb) {
-      bindEvent('click', jqElm, cb);
-    };
-
-    bindClickEvent(preferencesControlBtn, function () {
-      settings.hide(150);
+    $('#preferences-control-btn').on('click', function () {
       preferencesField.toggle(250);
     });
 
-    bindClickEvent(settingsCloseBtn, function () {
-      settings.hide();
+    repulsionFactorField.on('change mousemove', function () {
+      store.save(repulsionFactorKey, repulsionFactorField.val());
     });
 
-    bindClickEvent(configBtn, showSettingsView);
-
-    bindEvent('change mousemove', repulsionFactorField, function () {
-      store(repulsionFactorKey, repulsionFactorField.val());
+    attractionFactorField.on('change mousemove', function () {
+      store.save(attractionFactorKey, attractionFactorField.val());
     });
 
-    bindEvent('change mousemove', attractionFactorField, function () {
-      store(attractionFactorKey, attractionFactorField.val());
-    });
-
-    bindEvent('keyup', filterField, $.debounce(searchNames, 300));
-    bindEvent('keyup', excludeField, $.debounce(searchNames, 300));
-
-    bindClickEvent(pipelinesFetchBtn, function() {
-      showPipelinesToSelect(cctrayField.val(), filterField.val(), excludeField.val()).fail(onFail);
-    });
-
-    _.each(checkedPreferences, function(field, storeKey) {
-        bindClickEvent(field, function () {
-          store(storeKey, checkedToStoreVal(field));
-        });
-    });
-
-    bindClickEvent(settingsResetBtn, function() {
-      allStorageKeys.forEach(function(key) {
-        removeFromStore(key);
+    _.each(checkedPreferences, function (field, storeKey) {
+      field.on('click', function () {
+        store.save(storeKey, checkedToStoreVal(field));
       });
-
-      location.reload();
-    });
-
-    bindClickEvent(settingsSaveBtn, function () {
-      store(filterFieldKey, filterField.val().trim());
-      store(excludeFieldKey, excludeField.val().trim());
-
-      if (cctrayField.length > 0) {
-        store(cctrayUrlKey, cctrayField.val());
-      }
-
-      settings.hide();
-      location.reload();
     });
   }
 
   function setFieldValues() {
+    repulsionFactorField.val(getRepulsionFactor());
+    attractionFactorField.val(getAttractionFactor() * 100);
 
-    var setVal = function(storageKey, field) {
-      var valFromStorage = fromStore(storageKey);
-
-      if (!_.isEmpty(valFromStorage)) {
-        field.val(valFromStorage);
-      } else {
-        store(storageKey, field.val().trim())
+    _.each(soundMap, function(field, storeKey) {
+      var previousSelection = store.get(storeKey);
+      if (!_.isEmpty(previousSelection)) {
+        field.val(previousSelection);
       }
-    };
+    });
 
-    var setConfigValues = function() {
-      if (cctrayField.length == 0) {
-        removeFromStore(cctrayUrlKey);
-      } else {
-        setVal(cctrayUrlKey, cctrayField);
+    _.each(checkedPreferences, function (field, storeKey) {
+      if (store.get(storeKey) === 'off') {
+        field.prop('checked', false);
       }
-
-      setVal(filterFieldKey, filterField);
-      setVal(excludeFieldKey, excludeField);
-    };
-
-    var setControlValues = function() {
-      repulsionFactorField.val(getRepulsionFactor());
-      attractionFactorField.val(getAttractionFactor() * 100);
-
-      _.each(checkedPreferences, function(field, storeKey) {
-          if (fromStore(storeKey) === 'off') {
-            field.prop('checked', false);
-          }
-        });
-    };
-
-    setConfigValues();
-    setControlValues();
-  }
-
-  function showFilteredList(names) {
-
-    selectedPipelinesField.html('')
-
-    if (_.isEmpty(names)) { return; }
-
-    var appendName = function(name) { selectedPipelinesField.append('<label class="pipeline">' + name + '</label>') };
-
-    names.sort().forEach(appendName);
-
-    selectedPipelinesField.show(250);
-  }
-
-  function searchNames() {
-
-    var cctrayUrl = cctrayFieldValFromUI();
-
-    if (_.isEmpty(cctrayUrl)) {
-      return;
-    }
-
-    showPipelinesToSelect(cctrayUrl, filterField.val().trim(), excludeField.val().trim());
-  }
-
-  function showPipelinesToSelect(cctrayUrl, filterCriteria, excludeCriteria) {
-    return repo.filteredPipelinesNames(cctrayUrl, filterCriteria, excludeCriteria)
-      .then(showFilteredList)
-      .then(function () {
-        selectedPipelinesField.show(300)
-      });
-  }
-
-  function onFail() {
-    focusOnCCTrayUrlTextfield();
-    filterField.hide(300);
-    selectedPipelinesField.html('')
-    selectedPipelinesField.hide();
-  }
-
-  function showSettingsView() {
-    preferencesField.hide(250);
-
-    var cctrayUrl = getccTrayUrl();
-
-    if (cctrayUrl) {
-      showPipelinesToSelect(cctrayUrl, getFilterCriteria(), getExcludeCriteria())
-        .then(settings.show(200))
-        .fail(function () {
-          settings.show(onFail);
-        })
-
-    } else {
-      settings.show(focusOnCCTrayUrlTextfield);
-    }
-  }
-
-  function cctrayUrlForMainView() {
-    return fromStore(cctrayUrlKey) || cctrayReadOnlyField.text().trim();
-  }
-
-  function checkedPreferenceEnabled(p) {
-    return function() { return checkedPreferences[p].is(':checked') };
+    });
   }
 
   setFieldValues();
@@ -245,18 +78,11 @@ define(['repository', 'jquery', 'debounce'], function (repo) {
 
 
   return {
-    cctrayUrl: cctrayUrlForMainView,
-    show: showSettingsView,
     repulsionFactor: getRepulsionFactor,
     attractionFactor: getAttractionFactor,
-
-    pipelines: function () {
-      return repo.pipelines(cctrayUrlForMainView(), fromStore(filterFieldKey), fromStore(excludeFieldKey));
-    },
-
-    rotateNonGreenText: checkedPreferenceEnabled(rotateNonGreenTextKey),
-    playBrokenBuildSoundEnabled: checkedPreferenceEnabled(playBrokenBuildSoundKey),
-    playBrokenBuildIsHealthySoundEnabled: checkedPreferenceEnabled(playSickToHealthySoundKey)
+    rotateNonGreenText: function() { return checkedPreferences.rotateNonGreenText.is(':checked'); },
+    selectedBrokenBuildSound: function() { return soundMap.brokenBuildSound.val(); },
+    seletedBrokenToHealtySound: function() { return soundMap.brokenToHealthySound.val(); }
   }
 
 });

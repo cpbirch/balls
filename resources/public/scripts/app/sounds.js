@@ -1,32 +1,37 @@
 define(["settings"], function(settings) {
 
-  var previousHealthyBuilding = [];
-  var previousSickBuilding = [];
+  function createAudioMap() {
 
-  function loadAudio(path, settingsEnabledFn) {
-    var a = new Audio(path);
-    a.settingsEnabled = settingsEnabledFn;
-    a.addEventListener('ended', function() { a.currentTime = 0; });
-    return a;
+    function loadAudio(path) {
+      var a = new Audio(path);
+      a.addEventListener('ended', function() { a.currentTime = 0; });
+      return a;
+    }
+
+    var aMap = {};
+
+    $('#sick-to-healthy-build-sound-list option').each(function (index, o) {
+      var audioPath = o.value;
+      if (audioPath !== "none") {
+        aMap[audioPath] = loadAudio(audioPath)
+      }
+    });
+
+    return aMap;
   }
 
-  var audios = {
-    breakingBuildAudio: loadAudio('/sounds/wario_ah_hahaha_wonderful.wav', settings.playBrokenBuildSoundEnabled),
-    sickToHealthyAudio: loadAudio('/sounds/mario_woo_hoo.wav', settings.playBrokenBuildIsHealthySoundEnabled)
-  };
-
+  var allAudioMap = createAudioMap();
+  var previousHealthyBuilding = [];
+  var previousSickBuilding = [];
 
   function audioPlaying(audio) {
     return audio.currentTime != 0;
   }
 
-  function canPlay(audio) {
-    return audio.settingsEnabled() && !audioPlaying(audio)
-  }
-
   function playSound(sound) {
-    if (canPlay(sound)) {
-      sound.play();
+    var audioForSound = allAudioMap[sound];
+    if (audioForSound && !audioPlaying(audioForSound)) {
+      audioForSound.play();
     }
   }
 
@@ -40,13 +45,13 @@ define(["settings"], function(settings) {
   }
 
   function checkSickBuildingSuccess(healthy) {
-    playSoundFor(healthy, previousSickBuilding, audios.sickToHealthyAudio);
+    playSoundFor(healthy, previousSickBuilding, settings.seletedBrokenToHealtySound());
   }
 
   function checkBrokenBuild(sick) {
     var allPreviousBuilding = previousHealthyBuilding.concat(previousSickBuilding);
 
-    playSoundFor(sick, allPreviousBuilding, audios.breakingBuildAudio);
+    playSoundFor(sick, allPreviousBuilding, settings.selectedBrokenBuildSound());
   }
 
   function updatePreviousBuilding(sickBuilding, healthyBuilding) {

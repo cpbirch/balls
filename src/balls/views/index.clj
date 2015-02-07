@@ -1,6 +1,7 @@
 (ns balls.views.index
   (:require [balls.views.layout :refer [view-layout]]
-            [balls.config :refer [config]])
+            [balls.config :refer [config default-breaking-build-sound default-success-from-broken-build-sound]]
+            [balls.sounds :as sounds])
   (:use [hiccup.core]))
 
 (def title "Balls!!")
@@ -12,7 +13,8 @@
 
 
 (defn- cctray-read-only-field [cctray-url]
-  [:label {:id "ci-url-label" :value cctray-url} cctray-url])
+  [:div
+   [:input {:type "text" :placeholder "cc-tray url" :id "ci-url-text" :value cctray-url :disabled "disabled"}]])
 
 (defn- cctray-field [cctray-url]
   (if (empty? cctray-url)
@@ -33,15 +35,29 @@
    [:input {:type "button" :id "settings-save-btn" :value "save"}]
    [:input {:type "button" :id "settings-close-btn" :value "close"}]])
 
+(defn- option-for-sound [default-sound-name [name sound-path]]
+  (let [option-attrs {:value sound-path}]
+    (if (= name default-sound-name)
+      [:option (assoc option-attrs :selected "selected") name]
+      [:option option-attrs name])))
+
+(defn- sound-select-list [elm-id, all-sounds, default-sound-name]
+  [:select {:id elm-id}
+   [:option {:value "none"} "do not play"]
+   (map (partial option-for-sound default-sound-name) all-sounds)])
+
 (defn- preferences-section []
+  (let [all-sounds (sounds/all)]
+
   [:div {:id "preferences"}
-   [:input {:type "checkbox" :id "play-broken-build-sound" :checked "checked"}]
-   [:label "play sound when balls break"]
+
+   [:label "balls breaking sound"]
+   (sound-select-list "broken-build-sound-list", all-sounds, default-breaking-build-sound)
 
    [:br]
 
-   [:input {:type "checkbox" :id "play-sick-to-healthy-build-sound" :checked "checked"}]
-   [:label "play sound when balls are healthy after they break."]
+   [:label "breaking to healthy balls sound"]
+   (sound-select-list "sick-to-healthy-build-sound-list", all-sounds, default-success-from-broken-build-sound)
 
    [:br]
 
@@ -56,7 +72,7 @@
    [:br]
 
    [:label "attraction"]
-   [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]])
+   [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]]))
 
 (defn contents []
   (let [c (config)]

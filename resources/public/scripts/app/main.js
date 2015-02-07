@@ -1,6 +1,6 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
-        'views/scene', 'settings', 'views/nonGreenBuilds', 'sounds', 'views/lights'],
-  function (pipelines, camera, renderer, scene, settings, nonGreenBuilds, sounds) {
+        'views/scene', 'config', 'views/nonGreenBuilds', 'sounds', 'views/lights'],
+  function (pipelines, camera, renderer, scene, config, nonGreenBuilds, sounds) {
 
     function render() {
       TWEEN.update();
@@ -22,7 +22,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
     }
 
     function start() {
-      settings.pipelines()
+      config.pipelines()
         .then(function(d) {
           pipelines.init(d.healthy);
           return d;
@@ -32,7 +32,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
       render();
 
       setInterval(function() {
-        settings.pipelines()
+        config.pipelines()
           .then(function(d) {
             pipelines.update(d.healthy);
             return d;

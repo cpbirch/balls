@@ -13,7 +13,7 @@
 (defn- get-names [files]
   (map #(.getName %) files))
 
-(defn- normalize [filename]
+(defn normalize-name [filename]
   (-> filename
       (string/split #"\.")
       first
@@ -23,12 +23,12 @@
 
 (defn- normalized-map [filenames]
   (->> filenames
-       (map (juxt normalize web-path))
+       (map (juxt normalize-name web-path))
+       sort
        (into {})))
 
-(defn sounds []
+(defn all []
   (-> sounds-dir
       list-files
       get-names
       normalized-map))
-

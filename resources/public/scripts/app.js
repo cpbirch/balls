@@ -19,8 +19,8 @@ requirejs.config({
 });
 
 
-require(['main', 'settings', 'three', 'lib/tween', 'jquery', 'lodash'], function (main, settings) {
-  _.isEmpty(settings.cctrayUrl()) ? settings.show() : main()
+require(['main', 'config', 'three', 'lib/tween', 'jquery', 'lodash'], function (main, config) {
+  _.isEmpty(config.cctrayUrl()) ? config.show() : main()
 });
 
 
