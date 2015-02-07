@@ -2,6 +2,7 @@
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [balls.data.go :as go]
+            [balls.config :as config]
             [balls.views.index :as index-page]
             [cheshire.core :refer [generate-string]]
             [cheshire.generate :as cheshire])
@@ -23,11 +24,13 @@
 
   (GET "/pipelines" {params :params}
        (-> params
+           config/override-url
            go/get-filtered-projects
            as-json-response))
 
   (GET "/filternames" {params :params}
        (-> params
+           config/override-url
            go/find-names
            as-json-response))
 

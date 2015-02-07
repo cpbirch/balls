@@ -1,6 +1,6 @@
 (ns balls.views.index
   (:require [balls.views.layout :refer [view-layout]]
-            [balls.config :refer [config default-breaking-build-sound default-success-from-broken-build-sound]]
+            [balls.config :refer [config-from-file default-breaking-build-sound default-success-from-broken-build-sound]]
             [balls.sounds :as sounds])
   (:use [hiccup.core]))
 
@@ -75,7 +75,7 @@
    [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]]))
 
 (defn contents []
-  (let [c (config)]
+  (let [c (config-from-file)]
 
     (view-layout title
                  [:div {:id "interface"}
