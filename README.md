@@ -20,6 +20,12 @@ A CI build radiator that radiates Balls worth looking at.
 	Note: You can still do custom include/exclude from browser.
 	All teams using will have their Balls pointing to the same CI server.
 
+### Sounds
+
+	1. Copy your audio file in resources/sounds folder.
+	2. Reload page.
+	3. Select audio in UI controls.
+
 ### Ball Colors
 
 1. Green Ball is a healthy Ball.
@@ -29,8 +35,8 @@ A CI build radiator that radiates Balls worth looking at.
 
 ### UI Controls
 
-1. Toggle sound when Balls break.
-2. Toggle sound when Balls are healthy after they break.
+1. Sound selection for Balls breaking.
+2. Sound selection for Balls becoming healthy after breaking.
 2. Toggle text rotation.
 3. Attraction/Repulsion for all the green Balls.
 
