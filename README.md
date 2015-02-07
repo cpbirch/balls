@@ -22,7 +22,9 @@ A CI build radiator that radiates Balls worth looking at.
 
 ### Sounds
 
-	1. Copy your audio file in resources/sounds folder.
+Its understandable that you want your own sounds for your Balls.
+
+	1. Copy your audio file(s) in resources/sounds folder. No need to restart Balls server.
 	2. Reload page.
 	3. Select audio in UI controls.
 
