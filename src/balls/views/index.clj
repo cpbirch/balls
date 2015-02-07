@@ -36,17 +36,17 @@
 (defn- preferences-section []
   [:div {:id "preferences"}
    [:input {:type "checkbox" :id "play-broken-build-sound" :checked "checked"}]
-   [:label "play sound when build breaks"]
+   [:label "play sound when balls break"]
 
    [:br]
 
    [:input {:type "checkbox" :id "play-sick-to-healthy-build-sound" :checked "checked"}]
-   [:label "play sound when build is good after a failure"]
+   [:label "play sound when balls are healthy after they break."]
 
    [:br]
 
    [:input {:type "checkbox" :id "rotate-non-green-text" :checked "checked"}]
-   [:label "rotate non-green pipeline names"]
+   [:label "rotate non-green balls names"]
 
    [:br]
 

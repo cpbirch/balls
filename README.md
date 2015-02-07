@@ -1,6 +1,6 @@
 # Balls
 
-A build radiator that radiates balls worth looking at.
+A build radiator that radiates Balls worth looking at.
 
 ### Setup without server side config
 
@@ -20,18 +20,19 @@ A build radiator that radiates balls worth looking at.
 	Note: You can still do custom include/exclude from browser.
 	All teams using will have their Balls pointing to the same CI server.
 
-### Balls Colors
+### Ball Colors
 
-1. Green is good.
-2. Yellow is building.
-3. Red is broken.
-4. Orange is building what was broken.
+1. Green Ball is a healthy Ball.
+2. Yellow Ball is trying to go back to being healthy.
+3. Red Ball is a broken Ball.
+4. Orange Ball is trying to go back to being healthy after being broken.
 
 ### UI Controls
 
-1. Toggle sound when build breaks.
+1. Toggle sound when Balls break.
+2. Toggle sound when Balls are healthy after they break.
 2. Toggle text rotation.
-3. Attraction/Repulsion for all green balls.
+3. Attraction/Repulsion for all the green Balls.
 
 ### Supported CI Servers
 
@@ -42,6 +43,8 @@ A build radiator that radiates balls worth looking at.
 1. If webgl is not supported by browser/machine, it will not work.
    Use [nevergreen](https://github.com/build-canaries/nevergreen).
    You just won't have any Balls.
+2. Balls requires some place to be stored. Browser local storage must be available.
+3. Balls prefers Chrome.
 
 ### License
 
