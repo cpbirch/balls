@@ -1,6 +1,6 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
-        'views/scene', 'config', 'views/nonGreenBuilds', 'sounds', 'views/lights'],
-  function (pipelines, camera, renderer, scene, config, nonGreenBuilds, sounds) {
+        'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds', 'views/lights'],
+  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds) {
 
     function render() {
       TWEEN.update();
@@ -21,18 +21,25 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
 
     }
 
-    function start() {
-      config.pipelines()
+    function start(cctrayurl, includeFilter, excludeFilter) {
+      repo.pipelines(cctrayurl, includeFilter, excludeFilter)
         .then(function(d) {
-          pipelines.init(d.healthy);
-          return d;
+          pipelines.init(d.healthy || []);
         });
 
       setEventListeners();
       render();
 
       setInterval(function() {
-        config.pipelines()
+        repo.pipelines(cctrayurl, includeFilter, excludeFilter)
+          .then(function(d) {
+            d.healthy = d.healthy || [];
+            d.sick = d.sick || [];
+            d['sick-building'] = d['sick-building'] || [];
+            d['healthy-building'] = d['healthy-building'] || [];
+
+            return d;
+          })
           .then(function(d) {
             pipelines.update(d.healthy);
             return d;

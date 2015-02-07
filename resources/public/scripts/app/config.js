@@ -1,4 +1,4 @@
-define(['store', 'repository', 'jquery'], function (store, repo) {
+define(['store', 'repository', 'jquery', 'lodash'], function (store, repo) {
 
   var cctrayUrlStoreKey = "cctrayUrl";
   var filterFieldStoreKey = "filterField";
@@ -10,55 +10,42 @@ define(['store', 'repository', 'jquery'], function (store, repo) {
   var selectedPipelinesField = $('#selected-pipelines');
   var cctrayField = $('#ci-url-text');
 
-  function getccTrayUrl() { return store.get(cctrayUrlStoreKey) || cctrayField.val(); }
-
-  function getFilterCriteria() { return store.get(filterFieldStoreKey) || filterField.val(); }
-
-  function getExcludeCriteria() { return store.get(excludeFieldStoreKey) || excludeField.val(); }
-
   function onFail() {
+    settings.show(200);
     cctrayField.focus();
     selectedPipelinesField.html('')
   }
 
   (function setConfigValues() {
 
-    var setVal = function(storageKey, field) {
+    var setVal = function (storageKey, field) {
       var valFromStorage = store.get(storageKey);
 
       if (!_.isEmpty(valFromStorage)) {
         field.val(valFromStorage);
-      } else {
-        store.save(storageKey, field.val().trim())
       }
     };
 
-
-    if (cctrayField.length == 0) {
-      store.remove(cctrayUrlStoreKey);
-    } else {
-      setVal(cctrayUrlStoreKey, cctrayField);
-    }
-
+    setVal(cctrayUrlStoreKey, cctrayField);
     setVal(filterFieldStoreKey, filterField);
     setVal(excludeFieldStoreKey, excludeField);
   })();
 
   (function bindEvents() {
 
-    $('#settings-close-btn').on('click', function () { settings.hide(); });
-
-    $('#config').on('click', show);
-
-    [filterField, excludeField].forEach(function(f) {
-      f.on('keyup', _.debounce(searchNames, 300));
+    $('#settings-close-btn').on('click', function () {
+      settings.hide();
     });
 
-    $('#ci-url-fetch-btn').on('click', function() {
-      showPipelinesToSelect(cctrayField.val(), filterField.val(), excludeField.val()).fail(onFail);
+    $('#config').on('click', showPipelinesToSelect);
+
+    [filterField, excludeField].forEach(function (f) {
+      f.on('keyup', _.debounce(showPipelinesToSelect, 300));
     });
 
-    $('#settings-reset-btn').on('click', function() {
+    $('#ci-url-fetch-btn').on('click', showPipelinesToSelect);
+
+    $('#settings-reset-btn').on('click', function () {
       store.clear();
       location.reload();
     });
@@ -78,50 +65,33 @@ define(['store', 'repository', 'jquery'], function (store, repo) {
 
   function showFilteredList(names) {
     selectedPipelinesField.html('');
-    if (_.isEmpty(names)) { return; }
 
-    var appendName = function(name) { selectedPipelinesField.append('<label class="pipeline">' + name + '</label>') };
-    names.sort().forEach(appendName);
+    var appendName = function (name) {
+      selectedPipelinesField.append('<label class="pipeline">' + name + '</label>')
+    };
+
+    (names || []).sort().forEach(appendName);
     selectedPipelinesField.show(250);
   }
 
-  function showPipelinesToSelect(cctrayUrl, filterCriteria, excludeCriteria) {
-    return repo.filteredPipelinesNames(cctrayUrl, filterCriteria, excludeCriteria)
+  function showPipelinesToSelect() {
+    if (_.isEmpty(cctrayField.val())) { onFail(); }
+
+    return repo.filteredPipelinesNames(cctrayField.val(), filterField.val(), excludeField.val())
       .then(showFilteredList)
-      .then(function () {
-        selectedPipelinesField.show(300)
-      });
-  }
-
-  function searchNames() {
-    var cctrayUrl = cctrayField.val();
-    if (!_.isEmpty(cctrayUrl)) {
-      showPipelinesToSelect(cctrayUrl, filterField.val(), excludeField.val());
-    }
-  }
-
-  function show() {
-    var cctrayUrl = getccTrayUrl();
-
-    if (_.isEmpty(cctrayUrl)) {
-      settings.show(200);
-      cctrayField.focus();
-    } else {
-      showPipelinesToSelect(cctrayUrl, getFilterCriteria(), getExcludeCriteria())
-        .then(settings.show(200))
-        .fail(function () {
-          settings.show(onFail);
-        })
-    }
+      .then(function() { settings.show(300); })
+      .then(function() { selectedPipelinesField.show(300); })
+      .fail(onFail);
   }
 
   return {
-    cctrayUrl: function() { return store.get(cctrayUrlStoreKey); },
-    show: show,
+    cctrayUrl: function () { return cctrayField.val(); },
+    includeFilter: function () { return filterField.val(); },
+    excludeFilter: function () { return excludeField.val(); },
+    show: showPipelinesToSelect,
     pipelines: function () {
       return repo.pipelines(store.get(cctrayUrlStoreKey), store.get(filterFieldStoreKey), store.get(excludeFieldStoreKey));
     }
-
   };
 
 });

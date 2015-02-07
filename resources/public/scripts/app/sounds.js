@@ -60,10 +60,10 @@ define(["settings"], function(settings) {
   }
 
   function play(healthy, sick, sickBuilding, healthyBuilding) {
-    checkSickBuildingSuccess(healthy || []);
-    checkBrokenBuild(sick || []);
+    checkSickBuildingSuccess(healthy);
+    checkBrokenBuild(sick);
 
-    updatePreviousBuilding(sickBuilding || [], healthyBuilding || [])
+    updatePreviousBuilding(sickBuilding, healthyBuilding)
   }
 
   return {

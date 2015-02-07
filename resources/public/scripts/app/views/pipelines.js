@@ -28,7 +28,6 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
     }
 
     function createAllPipelineSpheres(successfulBuilds) {
-      successfulBuilds = successfulBuilds || [];
       successfulBuilds.forEach(createPipelineSphere)
 
       updateSpherePositionAndScales();
@@ -126,8 +125,6 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
     }
 
     function update(successfulBuilds) {
-      successfulBuilds = successfulBuilds || [];
-
       $.when(updatePipelines(successfulBuilds))
         .then(function() {
           removeNonExistingPipelines(successfulBuilds);

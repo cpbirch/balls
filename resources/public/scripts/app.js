@@ -20,7 +20,11 @@ requirejs.config({
 
 
 require(['main', 'config', 'three', 'lib/tween', 'jquery', 'lodash'], function (main, config) {
-  _.isEmpty(config.cctrayUrl()) ? config.show() : main()
+  var url = config.cctrayUrl();
+  var includeFilter = config.includeFilter();
+  var excludeFilter = config.excludeFilter();
+
+  _.isEmpty(config.cctrayUrl()) ? config.show() : main(url, includeFilter, excludeFilter)
 });
 
 

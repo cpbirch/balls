@@ -161,10 +161,6 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
     }
 
     function update(brokenData, sickBuildingData, healthyBuildingData) {
-      brokenData = brokenData || [];
-      healthyBuildingData = healthyBuildingData || [];
-      sickBuildingData = sickBuildingData || [];
-
       var nonGreenPipelinesData = brokenData.concat(sickBuildingData).concat(healthyBuildingData);
       nonGreenPipelinesData.forEach(focusOn)
 

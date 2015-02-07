@@ -1,4 +1,4 @@
-define(['store', 'jquery'], function (store) {
+define(['store', 'jquery', 'lodash'], function (store) {
 
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
@@ -14,8 +14,7 @@ define(['store', 'jquery'], function (store) {
 
   var checkedPreferences = {
     rotateNonGreenText: $('#rotate-non-green-text')
-  }
-
+  };
 
   function checkedToStoreVal(jqElm) {
     return jqElm.is(':checked') ? 'on' : 'off';
@@ -31,7 +30,25 @@ define(['store', 'jquery'], function (store) {
     return v ? parseInt(v) / 100 : 0.01;
   }
 
-  function bindEvents() {
+  (function setFieldValues() {
+    repulsionFactorField.val(getRepulsionFactor());
+    attractionFactorField.val(getAttractionFactor() * 100);
+
+    _.each(soundMap, function(field, storeKey) {
+      var previousSelection = store.get(storeKey);
+      if (!_.isEmpty(previousSelection)) {
+        field.val(previousSelection);
+      }
+    });
+
+    _.each(checkedPreferences, function (field, storeKey) {
+      if (store.get(storeKey) === 'off') {
+        field.prop('checked', false);
+      }
+    });
+  })();
+
+  (function bindEvents() {
     _.each(soundMap, function(field, storeKey) {
       store.save(storeKey, field.val());
     });
@@ -53,29 +70,7 @@ define(['store', 'jquery'], function (store) {
         store.save(storeKey, checkedToStoreVal(field));
       });
     });
-  }
-
-  function setFieldValues() {
-    repulsionFactorField.val(getRepulsionFactor());
-    attractionFactorField.val(getAttractionFactor() * 100);
-
-    _.each(soundMap, function(field, storeKey) {
-      var previousSelection = store.get(storeKey);
-      if (!_.isEmpty(previousSelection)) {
-        field.val(previousSelection);
-      }
-    });
-
-    _.each(checkedPreferences, function (field, storeKey) {
-      if (store.get(storeKey) === 'off') {
-        field.prop('checked', false);
-      }
-    });
-  }
-
-  setFieldValues();
-  bindEvents();
-
+  })();
 
   return {
     repulsionFactor: getRepulsionFactor,
