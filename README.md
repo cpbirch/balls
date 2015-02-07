@@ -1,6 +1,6 @@
 # Balls
 
-A build radiator that radiates Balls worth looking at.
+A CI build radiator that radiates Balls worth looking at.
 
 ### Setup without server side config
 
