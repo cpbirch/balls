@@ -18,7 +18,7 @@ define(['views/materials'], function (materials) {
 
     var g = new THREE.IcosahedronGeometry(.5, 1);
 
-    var material = materials(projectData, g.vertices.length);
+    var material = materials(projectData);
 
     var mesh = new THREE.Mesh(g, material);
     mesh.position.copy(position);
@@ -31,10 +31,10 @@ define(['views/materials'], function (materials) {
     var rotationSpeed =.01 + .02 * Math.random();
 
     mesh.__rotateOnAxis = function() {
-      mesh.rotateOnAxis(rotationAxis, rotationSpeed)
-    }
+      mesh.rotateOnAxis(rotationAxis, rotationSpeed);
+    };
 
-    return mesh
+    return mesh;
   }
 
   function create(projectData, scale) {

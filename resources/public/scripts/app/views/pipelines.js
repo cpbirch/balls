@@ -20,17 +20,8 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
       return sphere;
     }
 
-    function updateSpherePositionAndScales() {
-      _.each(pipelineSpheres, function (s) {
-        s.material.uniforms.positions.value = spherePositions;
-        s.material.uniforms.scales.value = scales;
-      });
-    }
-
     function createAllPipelineSpheres(successfulBuilds) {
       successfulBuilds.forEach(createPipelineSphere)
-
-      updateSpherePositionAndScales();
     }
 
     function updatePositionsAndCalculateCenter(balls) {
@@ -117,7 +108,6 @@ define(['repository', 'views/materials', 'views/scene', 'views/camera', 'views/a
         var sphere = pipelineSpheres[data.name];
         if (!sphere) {
           createPipelineSphere(data);
-          updateSpherePositionAndScales()
         } else {
           pipelineUpdater(sphere, data);
         }

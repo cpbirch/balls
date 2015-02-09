@@ -1,10 +1,10 @@
 define(['views/pipelineUpdater', 'views/pipelineCreator',
     'views/scene', 'views/camera', 'views/pipelineText', 'views/pipelineProgress'],
   function (pipelineUpdater, pipelineCreator, scene, camera, pipelineText, pipelineProgress) {
-    var nonGreenBuilds = {};
-    var distanceBetweenSpheres = 30;
-    var sphereScale = 15;
 
+    var nonGreenBuilds = {};
+    var sphereScale = 15;
+    var distanceBetweenSpheres = 30;
     var group_z_position = 300;
     var camera_default_z_location = 340;
 
@@ -116,9 +116,6 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
     function addPipelineToFocusGroup(data) {
       var sphere = pipelineCreator.create(data, sphereScale);
 
-      sphere.material.uniforms.positions.value = [sphere.position];
-      sphere.material.uniforms.scales.value = [sphereScale];
-
       sphere.position.set(0, 0, 0);
       var sprite = pipelineText.create(data.name);
 
@@ -162,7 +159,7 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
 
     function update(brokenData, sickBuildingData, healthyBuildingData) {
       var nonGreenPipelinesData = brokenData.concat(sickBuildingData).concat(healthyBuildingData);
-      nonGreenPipelinesData.forEach(focusOn)
+      nonGreenPipelinesData.forEach(focusOn);
 
       removeNonExistingPipelines(nonGreenPipelinesData)
     }

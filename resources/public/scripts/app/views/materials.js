@@ -1,53 +1,33 @@
-define(['text!shaders/ballsVertex.shader', 'text!shaders/ballsFragment.shader', 'three'],
-  function (vertexShader, fragmentShader) {
+define(['three'],
+  function () {
 
-  var colors = {
-    green: 0, yellow: 1, red: 2, sick_building: 3, sleeping: 4
-  };
+    var colors = {
+      healthy: "rgb(127,255,0)",
+      'healthy-building': "rgb(255,255,0)",
+      sick: "rgb(255,0,0)",
+      'sick-building': "rgb(255,140,0)",
+      sleeping: "rgb(169,169,169)"
+    };
 
-  function ballColor(pipelineData) {
-    var color = colors.green;
-
-    var buildStatus = pipelineData.prognosis;
-
-    if (buildStatus === "healthy-building") {
-      color = colors.yellow;
-    } else if (buildStatus === "sick") {
-      color = colors.red;
-    } else if (buildStatus === "sick-building") {
-      color = colors.sick_building;
+    function ballColor(pipelineData) {
+      var color = colors[pipelineData.prognosis] || colors.sleeping;
+      return new THREE.Color(color);
     }
 
-    return color;
-  }
+    function pipelineMaterial(pipelineData, options) {
+      var color = ballColor(pipelineData);
 
-  function pipelineMaterial(pipelineData, verticesCount, options) {
-    var fragmentShaderColor = ballColor(pipelineData);
-    options = options || {};
+      options = options || {};
+      if (options.onlyBallColor) {
+        return color;
+      }
 
-    if (options.onlyBallColor) {
-      return fragmentShaderColor;
+      var mat = new THREE.MeshLambertMaterial();
+      mat.color = ballColor(pipelineData);
+      mat.ambient = mat.color;
+      mat.shading = THREE.FlatShading;
+      return mat;
     }
 
-    var fragmentColorValues = [];
-    while(verticesCount--) fragmentColorValues[verticesCount] = fragmentShaderColor;
-
-    return new THREE.ShaderMaterial({
-      uniforms: {
-        positions: {type: 'v3v', value: null},
-        scales: {type: 'fv1', value: null}
-      },
-      attributes: {
-        fragmentColor: {
-          type: 'f',
-          value: fragmentColorValues
-        }
-      },
-      vertexShader: vertexShader,
-      fragmentShader: fragmentShader,
-      shading: THREE.FlatShading
-    });
-  }
-
-  return pipelineMaterial;
-});
+    return pipelineMaterial;
+  });
