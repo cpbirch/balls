@@ -56,16 +56,21 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
       progress.___rotate();
     }
 
-    function move(group, to, duration) {
-      new TWEEN.Tween(group.position)
+    function move(group, to, duration, onComplete) {
+      var t = new TWEEN.Tween(group.position)
         .to(to, duration)
         .easing(TWEEN.Easing.Exponential.Out)
         .onUpdate(function () {
           group.position.x = this.x || group.position.x;
           group.position.y = this.y || group.position.y;
           group.position.z = this.z || group.position.z;
-        })
-        .start();
+        });
+
+      if (onComplete) {
+        t.onComplete(onComplete);
+      }
+
+      t.start();
     }
 
 
@@ -151,8 +156,10 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
         var grp = nonGreenBuilds[name];
 
         if (grp) {
-          scene.remove(grp)
           delete nonGreenBuilds[name];
+          move(grp, {x: 0, y: 0, z: 0}, 2000, function () {
+            scene.remove(grp)
+          });
         }
       });
     }
