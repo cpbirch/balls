@@ -52,7 +52,6 @@ Its understandable that you want your own sounds for your Balls.
    Use [nevergreen](https://github.com/build-canaries/nevergreen).
    You just won't have any Balls.
 2. Balls requires some place to be stored. Browser local storage must be available.
-3. Balls prefers Chrome.
 
 ### License
 
