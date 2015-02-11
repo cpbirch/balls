@@ -1,12 +1,13 @@
 # Balls
 
-If you want a build monitor/radiator, it should be worth looking at.
+A 3D build radiator worth looking at.
 
-Build monitors needs to be fun. Anyone can develop plain old html/css grid based view, play sounds etc.
+Build monitors needs to be fun. Anyone can develop plain old html/css grid based view.
 That stuff is like flash, old and needs to be replaced.
 
 Put this monitor on a TV, and you will never go back to any other monitor.
-A word of caution: You will find this radiator hard to look away from and may not be able to focus on your work.
+
+A word of caution: You may find this radiator hard to look away from.
 
 ### Screenshots
 
@@ -32,16 +33,18 @@ A word of caution: You will find this radiator hard to look away from and may no
 
 ### Sounds
 
-We love sounds. Sounds are played at 2 different event.
+Sounds are played on 2 different events.
 
 	1. When the build breaks.
 	2. When the build succeeds after it breaks.
 
-To have custom sounds:
+To have your custom sounds available:
 
 	1. Copy your audio file(s) in resources/sounds folder. No need to restart the server.
-	2. Reload page.
-	3. Select audio in UI controls.
+	2. Reload the page.
+	3. Select audio in controls.
+
+You always have the ability to switch on/off either or both.
 
 ### Ball Colors
 
@@ -56,6 +59,28 @@ To have custom sounds:
 2. Sound selection when build goes from Orange to Green.
 3. Toggle text rotation.
 4. Attraction/Repulsion for all the green balls.
+
+### Coming soon
+
+In the order in which they came to my head.
+
+	1. Controls for pulsating Red balls. (Red balls already pulsate, just no controls to toggle it.)
+	2. Custom ball colors.
+	3. Greater CI Server support (needs to be done, but not really interested atm).
+	4. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
+	5. Blame animations. (to be switched off by default)
+	6. Remove local storage dependency. (may move down on priority)
+	7. Webcam/Mic input. (I have a cunning plan)
+	8. Interactive balls. (low on priority, its a radiator first)
+	9. Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
+	10. Highlight inactive builds. (and not just by making them gray).
+	11. Display FPS (this is easy, should have done it from the start).
+	12. Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
+	13. Konami code. (Again, I have a cunning plan, and not just flipping the colors).
+	14. Shape morphing (Hmm...)
+	15. Pair ladder (I know...)
+
+Rewrite the entire thing in clojurescript.
 
 ### Supported CI Servers
 
