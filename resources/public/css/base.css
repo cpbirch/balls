@@ -156,3 +156,39 @@ body {
 .hidden {
   display: none;
 }
+
+#overlay {
+}
+
+@-webkit-keyframes blink {
+  0% { background: rgba(255,0,0,0.5); }
+  50% { background: rgba(255,0,0,0); }
+  100% { background: rgba(255,0,0,0.5); }
+}
+
+@keyframes blink {
+  0% { background: rgba(255,0,0,0.5); }
+  50% { background: rgba(255,0,0,0); }
+  100% { background: rgba(255,0,0,0.5); }
+}
+
+.red-alert {
+  display: block;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+
+  -webkit-animation-direction: normal;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-name: blink;
+  -webkit-animation-timing-function: ease;
+
+  animation-direction: normal;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: blink;
+  animation-timing-function: ease;
+}

@@ -90,6 +90,8 @@
 
                  (preferences-section)
 
+                 [:div {:id "overlay"}]
+
                  [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}])))
 
 

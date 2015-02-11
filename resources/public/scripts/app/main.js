@@ -1,6 +1,7 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
-        'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds', 'views/lights'],
-  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds) {
+        'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds',
+        'views/events', 'views/lights'],
+  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events) {
 
     function render() {
       TWEEN.update();
@@ -48,6 +49,9 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
             return d;
           }).then(function(d) {
             sounds.play(d.healthy, d.sick, d['sick-building'], d['healthy-building']);
+            return d;
+          }).then(function(d) {
+            events(d);
           })
       }, 2000);
     }

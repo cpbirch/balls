@@ -1,5 +1,6 @@
 (ns balls.data.go
-  (:require [clj-cctray.core :as parser]))
+  (:require [clj-cctray.core :as parser]
+            [balls.data.events :as events]))
 
 (defn- select-projects
   [projects select-pattern]
@@ -31,4 +32,5 @@
 (defn get-filtered-projects
   [{:keys [url select exclude]}]
   (->> (interesting-projects url select exclude)
-      (group-by :prognosis)))
+      (group-by :prognosis)
+      events/add-ui-events))
