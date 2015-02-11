@@ -5,7 +5,7 @@ A 3D build radiator worth looking at.
 Build monitors needs to be fun. Anyone can develop plain old html/css grid based view.
 That stuff is like flash, old and needs to be replaced.
 
-Put this monitor on a TV, and you will never go back to any other monitor.
+Put this on your TV, and you will never go back to any other build radiator.
 
 A word of caution: You may find this radiator hard to look away from.
 
