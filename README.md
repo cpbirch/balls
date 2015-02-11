@@ -9,7 +9,7 @@ Put this monitor on a TV, and you will never go back to any other monitor.
 
 A word of caution: You may find this radiator hard to look away from.
 
-### Screenshots
+### Screenshots - That do not do justice
 
 ![Green balls](docs/all-green-balls.png)
 ![Building balls](docs/balls-building.png)
