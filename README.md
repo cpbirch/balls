@@ -44,7 +44,7 @@ To have your custom sounds available:
 	2. Reload the page.
 	3. Select audio in controls.
 
-You always have the ability to switch on/off either or both.
+You always have the ability to switch on/off either or both sounds.
 
 ### Ball Colors
 
@@ -65,26 +65,26 @@ Purpose of these events are to get your attention to too many broken builds.
 2. Sound selection when build goes from Orange to Green.
 3. Toggle text rotation.
 4. Attraction/Repulsion for all the green balls.
+5. Toggle Pulsating Balls (to be implemented)
+6. Different thresholds for events (to be implemented).
+7. Custom colors. (to be implemented).
+8. Custom Shapes (Hmm... then I may have to rename repo.)
 
 ### Coming soon
 
-In the order in which they came to my head.
+In the order in which they came to my mind.
 
-	1. Controls for events and pulsating balls.
-	2. Custom ball colors.
-	3. Greater CI Server support (needs to be done, but not really interested atm).
-	4. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
-	5. Blame animations. (to be switched off by default)
-	6. Remove local storage dependency. (may move down on priority)
-	7. Webcam/Mic input. (I have a cunning plan)
-	8. Interactive balls. (low on priority, its a radiator first)
-	9. Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
-	10. Highlight inactive builds. (and not just by making them gray).
-	11. Display FPS (this is easy, should have done it from the start).
-	12. Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
-	13. Konami code. (Again, I have a cunning plan, and not just flipping the colors).
-	14. Shape morphing (Hmm...)
-	15. Pair ladder (I know...)
+	1. Greater CI Server support (needs to be done, but not really interested atm).
+	2. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
+	3. Blame animations. (to be switched off by default)
+	4. Remove local storage dependency. (may move down on priority)
+	5. Webcam/Mic input. (I have a cunning plan)
+	6. Interactive balls. (low on priority, its a radiator first)
+	7. Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
+	8. Highlight inactive builds. (and not just by making them gray).
+	9. Display FPS (this is easy, should have done it from the start).
+	10. Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
+	11. Konami code. (Again, I have a cunning plan, and not just flipping the colors).
 
 Rewrite the entire thing in clojurescript.
 
