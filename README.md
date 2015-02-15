@@ -58,7 +58,7 @@ People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
 
 1. Glitch effect (if 3 or more broken builds).
-2. Red alerts (if 5 or more broken builds).
+2. Red alert (if 5 or more broken builds).
 
 ### UI Controls
 
