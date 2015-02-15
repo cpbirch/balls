@@ -54,10 +54,11 @@ You always have the ability to switch on/off either or both sounds.
 4. Orange is building after being Red.
 
 ### Events
-Purpose of these events are to get your attention to too many broken builds.
+People sometimes prefer to have sounds switched off.
+These events are meant to attract your attention to broken builds visually.
 
-1. Glitch effect.
-2. Red alerts
+1. Glitch effect (if 3 or more broken builds).
+2. Red alerts (if 5 or more broken builds).
 
 ### UI Controls
 
@@ -66,7 +67,7 @@ Purpose of these events are to get your attention to too many broken builds.
 3. Toggle text rotation.
 4. Attraction/Repulsion for all the green balls.
 5. Toggle Pulsating Balls (to be implemented)
-6. Different thresholds for events (to be implemented).
+6. Thresholds for events (to be implemented).
 7. Custom colors. (to be implemented).
 8. Custom Shapes (Hmm... then I may have to rename repo.)
 
