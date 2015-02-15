@@ -53,6 +53,12 @@ You always have the ability to switch on/off either or both.
 3. Red is broken.
 4. Orange is building after being Red.
 
+### Events
+Purpose of these events are to get your attention to too many broken builds.
+
+1. Glitch effect.
+2. Red alerts
+
 ### UI Controls
 
 1. Sound selection when build goes Red.
@@ -64,7 +70,7 @@ You always have the ability to switch on/off either or both.
 
 In the order in which they came to my head.
 
-	1. Controls for pulsating Red balls. (Red balls already pulsate, just no controls to toggle it.)
+	1. Controls for events and pulsating balls.
 	2. Custom ball colors.
 	3. Greater CI Server support (needs to be done, but not really interested atm).
 	4. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
