@@ -1,12 +1,16 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
         'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds',
-        'views/events', 'views/lights'],
-  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events) {
+        'views/events', 'views/composer',
+        'views/lights'],
+  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer) {
 
+    var glitchEffectEnabled = false;
     function render() {
       TWEEN.update();
       renderer.render(scene, camera);
       requestAnimationFrame(render);
+
+      if (glitchEffectEnabled) { composer.render(); }
 
       pipelines.animate();
     }
@@ -51,8 +55,9 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
             sounds.play(d.healthy, d.sick, d['sick-building'], d['healthy-building']);
             return d;
           }).then(function(d) {
+            glitchEffectEnabled = d['glitch'];
             events(d);
-          })
+          });
       }, 2000);
     }
 

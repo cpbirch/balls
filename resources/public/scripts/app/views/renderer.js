@@ -5,6 +5,7 @@ define(['three'], function() {
   document.getElementById("container").appendChild(renderer.domElement);
 
   renderer.setClearColor( 0, 1 );
+  //renderer.setPi( window.devicePixelRatio );
 
   return renderer;
 });
