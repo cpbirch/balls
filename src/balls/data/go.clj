@@ -1,6 +1,7 @@
 (ns balls.data.go
   (:require [clj-cctray.core :as parser]
-            [balls.data.events :as events]))
+            [balls.data.events :as events]
+            [balls.data.server :as server]))
 
 (defn- select-projects
   [projects select-pattern]
@@ -12,7 +13,7 @@
 
 (defn- all-projects
   [url]
-  (parser/get-projects url {:normalise :all :server :go}))
+  (parser/get-projects url {:normalise :all :server (server/type url)}))
 
 (defn- exclude-projects [projects exclude-pattern]
   (if (empty? exclude-pattern)

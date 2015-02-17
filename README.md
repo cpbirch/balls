@@ -14,6 +14,22 @@ A word of caution: You may find this radiator hard to look away from.
 ![Green balls](docs/all-green-balls.png)
 ![Building balls](docs/balls-building.png)
 
+### Supported CI Servers
+
+Thanks to [clj-cctray](https://github.com/build-canaries/clj-cctray)
+
+	1.  GO
+	2.  Jenkins
+	3.  Hudson
+	4.  Travis
+	5.  Snap
+	6.  Circle
+	7.  Team City
+	8.  Cruise Control.rb
+	9.  CruiseControl
+	10. CruiseControl.NET
+	11. Solano
+
 ### Setup without server side config
 
 	1. lein ring server
@@ -75,23 +91,18 @@ These events are meant to attract your attention to broken builds visually.
 
 In the order in which they came to my mind.
 
-	1. Greater CI Server support (needs to be done, but not really interested atm).
-	2. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
-	3. Blame animations. (to be switched off by default)
-	4. Remove local storage dependency. (may move down on priority)
-	5. Webcam/Mic input. (I have a cunning plan)
-	6. Interactive balls. (low on priority, its a radiator first)
-	7. Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
-	8. Highlight inactive builds. (and not just by making them gray).
-	9. Display FPS (this is easy, should have done it from the start).
-	10. Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
-	11. Konami code. (Again, I have a cunning plan, and not just flipping the colors).
+	1. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
+	2. Blame animations. (to be switched off by default)
+	3. Remove local storage dependency. (may move down on priority)
+	4. Webcam/Mic input. (I have a cunning plan)
+	5. Interactive balls. (low on priority, its a radiator first)
+	6. Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
+	7. Highlight inactive builds. (and not just by making them gray).
+	8. Display FPS (this is easy, should have done it from the start).
+	9. Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
+	10. Konami code. (Again, I have a cunning plan, and not just flipping the colors).
 
 Rewrite the entire thing in clojurescript.
-
-### Supported CI Servers
-
-1. GO
 
 ### Known issues
 
