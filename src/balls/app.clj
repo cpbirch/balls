@@ -18,12 +18,19 @@
    :headers      {"Access-Control-Allow-Origin" "*"
                   "content-type" "application/json"}})
 
+(defn- convert-to-number [p params]
+  (if-let [v (p params)]
+    (assoc params p (read-string v))
+    params))
+
 (defroutes main-routes
   (GET "/" []
        (index-page/contents))
 
   (GET "/pipelines" {params :params}
-       (-> params
+       (->> params
+           (convert-to-number :red-alert-threshold)
+           (convert-to-number :glitch-effect-threshold)
            config/override-config-data
            go/get-filtered-projects
            as-json-response))

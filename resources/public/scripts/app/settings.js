@@ -2,9 +2,15 @@ define(['store', 'jquery', 'lodash'], function (store) {
 
   var repulsionFactorKey = "repulsionFactor";
   var attractionFactorKey = "attractionFactor";
+  var redAlertThresholdKey = "redAlertThreshold";
+  var glitchEffectThresholdKey = "glitchEffectThreshold";
 
   var repulsionFactorField = $('#repulsion-factor');
   var attractionFactorField = $('#attraction-factor');
+
+  var redAlertThresholdField = $('#red-alert-threshold');
+  var glitchEffectThresholdField = $('#glitch-effect-threshold');
+
   var preferencesField = $('#preferences');
 
   var soundMap = {
@@ -34,6 +40,12 @@ define(['store', 'jquery', 'lodash'], function (store) {
     repulsionFactorField.val(getRepulsionFactor());
     attractionFactorField.val(getAttractionFactor() * 100);
 
+    var v = store.get(redAlertThresholdKey);
+    if (v) { redAlertThresholdField.val(v) }
+
+    v = store.get(glitchEffectThresholdKey);
+    if (v) { glitchEffectThresholdField.val(v) }
+
     _.each(soundMap, function(field, storeKey) {
       var previousSelection = store.get(storeKey);
       if (!_.isEmpty(previousSelection)) {
@@ -50,7 +62,9 @@ define(['store', 'jquery', 'lodash'], function (store) {
 
   (function bindEvents() {
     _.each(soundMap, function(field, storeKey) {
-      store.save(storeKey, field.val());
+      field.on('change', function() {
+        store.save(storeKey, field.val());
+      })
     });
 
     $('#preferences-control-btn').on('click', function () {
@@ -65,6 +79,14 @@ define(['store', 'jquery', 'lodash'], function (store) {
       store.save(attractionFactorKey, attractionFactorField.val());
     });
 
+    glitchEffectThresholdField.on('change', function() {
+      store.save(glitchEffectThresholdKey, glitchEffectThresholdField.val())
+    });
+
+    redAlertThresholdField.on('change', function() {
+      store.save(redAlertThresholdKey, redAlertThresholdField.val())
+    });
+
     _.each(checkedPreferences, function (field, storeKey) {
       field.on('click', function () {
         store.save(storeKey, checkedToStoreVal(field));
@@ -72,12 +94,20 @@ define(['store', 'jquery', 'lodash'], function (store) {
     });
   })();
 
+  function effectsThreshold(field) {
+    if (field.length > 0) {
+      return field.val();
+    }
+  }
+
   return {
     repulsionFactor: getRepulsionFactor,
     attractionFactor: getAttractionFactor,
     rotateNonGreenText: function() { return checkedPreferences.rotateNonGreenText.is(':checked'); },
     selectedBrokenBuildSound: function() { return soundMap.brokenBuildSound.val(); },
-    seletedBrokenToHealtySound: function() { return soundMap.brokenToHealthySound.val(); }
+    seletedBrokenToHealtySound: function() { return soundMap.brokenToHealthySound.val(); },
+    glitchEffectThreshold: function() { return effectsThreshold(glitchEffectThresholdField); },
+    redAlertThreshold: function() { return effectsThreshold(redAlertThresholdField); }
   }
 
 });

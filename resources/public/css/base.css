@@ -192,3 +192,7 @@ body {
   animation-name: blink;
   animation-timing-function: ease;
 }
+
+#interface, #preferences-control, #preferences, #config-interface {
+  z-index: 99;
+}

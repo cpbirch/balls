@@ -1,7 +1,8 @@
 (ns balls.views.index
   (:require [balls.views.layout :refer [view-layout]]
             [balls.config :refer [config-from-file default-breaking-build-sound default-success-from-broken-build-sound]]
-            [balls.sounds :as sounds])
+            [balls.sounds :as sounds]
+            [balls.data.events :as events])
   (:use [hiccup.core]))
 
 (def title "Balls!!")
@@ -41,12 +42,22 @@
       [:option (assoc option-attrs :selected "selected") name]
       [:option option-attrs name])))
 
-(defn- sound-select-list [elm-id, all-sounds, default-sound-name]
+(defn- sound-select-list [elm-id all-sounds default-sound-name]
   [:select {:id elm-id}
    [:option {:value "none"} "do not play"]
    (map (partial option-for-sound default-sound-name) all-sounds)])
 
-(defn- preferences-section []
+(defn- options-for-count [selected-build-count current-build-count]
+  (if (= selected-build-count current-build-count)
+    [:option (assoc {:value current-build-count} :selected "selected") current-build-count]
+    [:option {:value current-build-count} current-build-count]))
+
+(defn- build-count-list [elm-id number-of-builds selected-build-count]
+  [:select {:id elm-id}
+   [:option {:value "0"} "disable"]
+   (map (partial options-for-count selected-build-count) (range 1 (inc number-of-builds)))])
+
+(defn- preferences-section [{:keys [red-alert-threshold glitch-effect-threshold]}]
   (let [all-sounds (sounds/all)]
 
   [:div {:id "preferences"}
@@ -72,7 +83,25 @@
    [:br]
 
    [:label "attraction"]
-   [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]]))
+   [:input {:type "range" :id "attraction-factor" :min "1" :max "100" :value "1" :step "1"}]
+
+   [:br]
+
+   [:label "red alert threshold"]
+   (if-not red-alert-threshold
+     (build-count-list "red-alert-threshold" 20 events/default-red-alert-threshold)
+     [:label {:id "red-alert-threshold-disabled"} " can only be updated in config file."])
+
+   [:br]
+
+   [:label "glitch effect threshold"]
+   (if-not glitch-effect-threshold
+     (build-count-list "glitch-effect-threshold" 20 events/default-glitch-effect-threshold)
+     [:label {:id "glitch-effect-threshold-disabled"} " can only be updated in config file."])
+
+   [:br]
+
+   ]))
 
 (defn contents []
   (let [c (config-from-file)]
@@ -88,7 +117,7 @@
 
                  [:div {:id "container"}]
 
-                 (preferences-section)
+                 (preferences-section c)
 
                  [:div {:id "overlay"}]
 

@@ -88,10 +88,7 @@ define(['store', 'repository', 'jquery', 'lodash'], function (store, repo) {
     cctrayUrl: function () { return cctrayField.val(); },
     includeFilter: function () { return filterField.val(); },
     excludeFilter: function () { return excludeField.val(); },
-    show: showPipelinesToSelect,
-    pipelines: function () {
-      return repo.pipelines(store.get(cctrayUrlStoreKey), store.get(filterFieldStoreKey), store.get(excludeFieldStoreKey));
-    }
+    show: showPipelinesToSelect
   };
 
 });

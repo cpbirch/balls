@@ -1,6 +1,6 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
         'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds',
-        'views/events', 'views/composer',
+        'views/events', 'views/composer', 'settings',
         'views/lights'],
   function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer) {
 
