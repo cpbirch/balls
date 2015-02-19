@@ -73,8 +73,8 @@ You always have the ability to switch on/off either or both sounds.
 People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
 
-1. Glitch effect (if 3 or more broken builds, can be configured).
-2. Red alert (if 5 or more broken builds, can be configured).
+1. Glitch effect (if 3 or more broken builds, configurable).
+2. Red alert (if 5 or more broken builds, configurable).
 
 ### UI Controls
 
