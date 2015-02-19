@@ -82,7 +82,7 @@ These events are meant to attract your attention to broken builds visually.
 2. Sound selection when build goes from Orange to Green.
 3. Toggle text rotation.
 4. Attraction/Repulsion for all the green balls.
-5. Thresholds for events.
+5. Custom thresholds for events.
 6. Toggle Pulsating Balls (to be implemented)
 7. Custom colors. (to be implemented).
 8. Custom Shapes (Hmm... then I may have to rename repo.)
