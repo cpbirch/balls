@@ -73,8 +73,8 @@ You always have the ability to switch on/off either or both sounds.
 People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
 
-1. Glitch effect (if 3 or more broken builds).
-2. Red alert (if 5 or more broken builds).
+1. Glitch effect (if 3 or more broken builds, can be configured).
+2. Red alert (if 5 or more broken builds, can be configured).
 
 ### UI Controls
 
@@ -82,8 +82,8 @@ These events are meant to attract your attention to broken builds visually.
 2. Sound selection when build goes from Orange to Green.
 3. Toggle text rotation.
 4. Attraction/Repulsion for all the green balls.
-5. Toggle Pulsating Balls (to be implemented)
-6. Thresholds for events (to be implemented).
+5. Thresholds for events.
+6. Toggle Pulsating Balls (to be implemented)
 7. Custom colors. (to be implemented).
 8. Custom Shapes (Hmm... then I may have to rename repo.)
 
