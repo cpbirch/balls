@@ -1,5 +1,16 @@
 {
-  "cctray-url": "cctray-url",
-  "include": "regex-pattern",
-  "exclude": "regex-pattern"
+  "cctray-url": "",
+  "include": ".*",
+  "exclude": ".*qa",
+  "glitch-effect-threshold": 3,
+  "red-alert-threshold": 5,
+
+  "_comments": {
+    "cctray-url": "cctray url of your CI server",
+    "include": "regex to include builds",
+    "exclude": "exclude builds from included ones",
+    "glitch-effect-threshold": "default value is 3, 0 or less is off."
+    "red-alert-threshold": "default value is 5, 0 or less is off,
+  }
+
 }

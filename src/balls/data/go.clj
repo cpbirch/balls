@@ -31,7 +31,7 @@
   {:names (->> (interesting-projects url select exclude) (map :name))})
 
 (defn get-filtered-projects
-  [{:keys [url select exclude]}]
+  [{:keys [url select exclude] :as params}]
   (->> (interesting-projects url select exclude)
       (group-by :prognosis)
-      events/add-ui-events))
+      (events/add-ui-events params)))

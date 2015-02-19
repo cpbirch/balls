@@ -24,7 +24,7 @@
 
   (GET "/pipelines" {params :params}
        (-> params
-           config/override-url
+           config/override-config-data
            go/get-filtered-projects
            as-json-response))
 

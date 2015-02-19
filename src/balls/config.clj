@@ -9,6 +9,9 @@
 
 (def ^:private -config (atom {}))
 
+(defn- config-attr [attr]
+  (attr @-config))
+
 (defn- config-file-exists? []
   (.exists (as-file config-file)))
 
@@ -22,7 +25,17 @@
         (read-str :key-fn keyword)
         reset-config)))
 
-(defn override-url [params]
-  (if-let [cctray-url (:cctray-url @-config)]
-    (assoc params :url cctray-url)
+(defn- override [attr-key params-key-to-override params]
+  (if-let [attr-val (config-attr attr-key)]
+    (assoc params params-key-to-override attr-val)
     params))
+
+(def override-url (partial override :cctray-url :url))
+(def override-red-alert-threshold (partial override :red-alert-threshold :red-alert-threshold))
+(def override-glitch-effect-threshold (partial override :glitch-effect-threshold :glitch-effect-threshold))
+
+(defn override-config-data [params]
+  (-> params
+      override-url
+      override-red-alert-threshold
+      override-glitch-effect-threshold))
