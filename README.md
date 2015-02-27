@@ -117,6 +117,10 @@ Rewrite the entire thing in clojurescript.
 
 2. Local storage is required to save your config and UI controls.
 
+3. The radiator has been tested with 200 simultaneous builds.
+   If you suffer performance issue, filter pipelines out.
+
+
 ### License
 
 Distributed under the Eclipse Public License.
