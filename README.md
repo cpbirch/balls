@@ -7,8 +7,6 @@ That stuff is like flash, old and needs to be replaced.
 
 Put this on your TV, and you will never go back to any other build radiator.
 
-A word of caution: You may find this radiator hard to look away from.
-
 ### Screenshots - That do not do justice
 
 ![Green balls](docs/all-green-balls.png)
