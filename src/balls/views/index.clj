@@ -36,7 +36,7 @@
    [:input {:type "button" :id "settings-save-btn" :value "save"}]
    [:input {:type "button" :id "settings-close-btn" :value "close"}]])
 
-(defn- option-for-sound [default-sound-name [name sound-path]]
+(defn- options-for-select-list [default-sound-name [name sound-path]]
   (let [option-attrs {:value sound-path}]
     (if (= name default-sound-name)
       [:option (assoc option-attrs :selected "selected") name]
@@ -45,7 +45,11 @@
 (defn- sound-select-list [elm-id all-sounds default-sound-name]
   [:select {:id elm-id}
    [:option {:value "none"} "do not play"]
-   (map (partial option-for-sound default-sound-name) all-sounds)])
+   (map (partial options-for-select-list default-sound-name) all-sounds)])
+
+(defn- shape-select-list [elm-id all-shapes default-shape]
+  [:select {:id elm-id}
+   (map #(options-for-select-list default-shape [% %]) all-shapes)])
 
 (defn- options-for-count [selected-build-count current-build-count]
   (if (= selected-build-count current-build-count)
@@ -58,7 +62,8 @@
    (map (partial options-for-count selected-build-count) (range 1 (inc number-of-builds)))])
 
 (defn- preferences-section [{:keys [red-alert-threshold glitch-effect-threshold]}]
-  (let [all-sounds (sounds/all)]
+  (let [all-sounds (sounds/all)
+        all-shapes ["icosahedron", "torus", "cylinder", "cone", "coil", "tetrahedron", "octahedron", "ball", "random"]]
 
   [:div {:id "preferences"}
 
@@ -100,6 +105,11 @@
      [:label {:id "glitch-effect-threshold-disabled"} " can only be updated in config file."])
 
    [:br]
+
+   [:label "shapes"]
+   (shape-select-list "shape-type-list", all-shapes, "ball")
+
+   ;#shape-type-list
 
    ]))
 

@@ -45,7 +45,7 @@ define(["settings"], function(settings) {
   }
 
   function checkSickBuildingSuccess(healthy) {
-    playSoundFor(healthy, previousSickBuilding, settings.seletedBrokenToHealtySound());
+    playSoundFor(healthy, previousSickBuilding, settings.selectedBrokenToHealtySound());
   }
 
   function checkBrokenBuild(sick) {

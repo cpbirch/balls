@@ -69,6 +69,12 @@ You always have the ability to switch on/off either or both sounds.
 3. Red is broken.
 4. Orange is building after being Red.
 
+### Shapes
+
+Not everyone prefers a ball. You can select one of the following shapes or let the app select one randomly.
+
+	ball, icosahedron, torus, cylinder, cone, coil, tetrahedron, octahedron
+
 ### Events
 People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
@@ -78,14 +84,14 @@ These events are meant to attract your attention to broken builds visually.
 
 ### UI Controls
 
-1. Sound selection when build goes Red.
-2. Sound selection when build goes from Orange to Green.
-3. Toggle text rotation.
-4. Attraction/Repulsion for all the green balls.
-5. Custom thresholds for events.
-6. Toggle Pulsating Balls (to be implemented)
-7. Custom colors. (to be implemented).
-8. Custom Shapes (Hmm... then I may have to rename repo.)
+	1. Sound selection when build goes Red.
+	2. Sound selection when build goes from Orange to Green.
+	3. Custom Shapes
+	4. Toggle text rotation.
+	5. Attraction/Repulsion for all the green balls.
+	6. Custom thresholds for events.
+	7. Toggle Pulsating Balls (to be implemented)
+	8. Custom colors. (to be implemented).
 
 ### Coming soon
 

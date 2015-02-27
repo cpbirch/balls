@@ -1,4 +1,45 @@
-define(['views/materials'], function (materials) {
+define(['views/materials', 'settings'], function (materials, settings) {
+
+  function vertices() {
+    return  [
+      -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
+      -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
+    ];
+  }
+
+  function faces() {
+    return [
+      2,1,0,    0,3,2,
+      0,4,7,    7,3,0,
+      0,1,5,    5,4,0,
+      1,2,6,    6,5,1,
+      2,3,7,    7,6,2,
+      4,5,6,    6,7,4
+    ];
+  }
+
+  var geometries = {
+    icosahedron: function() { return new THREE.IcosahedronGeometry(.5, 1);},
+    torus: function() { return new THREE.TorusGeometry(0.32, 0.2, 7, 7, 6.3);},
+    cylinder: function() { return new THREE.CylinderGeometry(0.31, 0.31, 0.8); },
+    cone: function() { return new THREE.CylinderGeometry(0.31, 0, 0.85); },
+    coil: function() { return new THREE.TorusKnotGeometry(0.35, 0.05, 200, 10, _.random(1, 10), _.random(1, 15), 1); },
+    tetrahedron: function() { return new THREE.TetrahedronGeometry(0.5, 0);},
+    octahedron: function() {return new THREE.OctahedronGeometry(0.5, 0)},
+    ball: function() {return new THREE.PolyhedronGeometry(vertices(), faces(), 0.5, 3)}
+  };
+
+  function randomShape() {
+    var allShapes = _.keys(geometries);
+    var selectedShapeIndex = _.random(0, allShapes.length - 1);
+    return geometries[allShapes[selectedShapeIndex]]();
+  }
+
+
+  function createoGeo() {
+    var shapeFn = geometries[settings.shapeType()] || randomShape;
+    return shapeFn();
+  }
 
   function generateRandomPosition() {
     var radians = 15;
@@ -16,7 +57,7 @@ define(['views/materials'], function (materials) {
   function createSphere(scale, projectData) {
     var position = generateRandomPosition();
 
-    var g = new THREE.IcosahedronGeometry(.5, 1);
+    var g = createoGeo();
 
     var material = materials(projectData);
 
@@ -28,7 +69,7 @@ define(['views/materials'], function (materials) {
     var rotationAxis = new THREE.Vector3(.5 - Math.random(), .5 - Math.random(), .5 - Math.random());
     rotationAxis.normalize();
 
-    var rotationSpeed =.01 + .02 * Math.random();
+    var rotationSpeed =.03 + .02 * Math.random();
 
     mesh.__rotateOnAxis = function() {
       mesh.rotateOnAxis(rotationAxis, rotationSpeed);

@@ -13,9 +13,10 @@ define(['store', 'jquery', 'lodash'], function (store) {
 
   var preferencesField = $('#preferences');
 
-  var soundMap = {
+  var selectListFields = {
     brokenBuildSound: $('#broken-build-sound-list'),
-    brokenToHealthySound: $('#sick-to-healthy-build-sound-list')
+    brokenToHealthySound: $('#sick-to-healthy-build-sound-list'),
+    shapeType: $('#shape-type-list')
   };
 
   var checkedPreferences = {
@@ -46,7 +47,7 @@ define(['store', 'jquery', 'lodash'], function (store) {
     v = store.get(glitchEffectThresholdKey);
     if (v) { glitchEffectThresholdField.val(v) }
 
-    _.each(soundMap, function(field, storeKey) {
+    _.each(selectListFields, function(field, storeKey) {
       var previousSelection = store.get(storeKey);
       if (!_.isEmpty(previousSelection)) {
         field.val(previousSelection);
@@ -61,7 +62,7 @@ define(['store', 'jquery', 'lodash'], function (store) {
   })();
 
   (function bindEvents() {
-    _.each(soundMap, function(field, storeKey) {
+    _.each(selectListFields, function(field, storeKey) {
       field.on('change', function() {
         store.save(storeKey, field.val());
       })
@@ -104,10 +105,11 @@ define(['store', 'jquery', 'lodash'], function (store) {
     repulsionFactor: getRepulsionFactor,
     attractionFactor: getAttractionFactor,
     rotateNonGreenText: function() { return checkedPreferences.rotateNonGreenText.is(':checked'); },
-    selectedBrokenBuildSound: function() { return soundMap.brokenBuildSound.val(); },
-    seletedBrokenToHealtySound: function() { return soundMap.brokenToHealthySound.val(); },
+    selectedBrokenBuildSound: function() { return selectListFields.brokenBuildSound.val(); },
+    selectedBrokenToHealtySound: function() { return selectListFields.brokenToHealthySound.val(); },
     glitchEffectThreshold: function() { return effectsThreshold(glitchEffectThresholdField); },
-    redAlertThreshold: function() { return effectsThreshold(redAlertThresholdField); }
+    redAlertThreshold: function() { return effectsThreshold(redAlertThresholdField); },
+    shapeType: function() { return selectListFields.shapeType.val(); }
   }
 
 });
