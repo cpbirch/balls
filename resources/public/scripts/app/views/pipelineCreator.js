@@ -35,9 +35,22 @@ define(['views/materials', 'settings'], function (materials, settings) {
     return geometries[allShapes[selectedShapeIndex]]();
   }
 
+  var projectShapes = {};
 
-  function createoGeo() {
-    var shapeFn = geometries[settings.shapeType()] || randomShape;
+
+  function createoGeo(projectData) {
+    var shapeType = settings.shapeType();
+    var shapeFn = geometries[shapeType] || randomShape;
+    if (shapeType === "random" && projectShapes[projectData.name]) {
+      return projectShapes[projectData.name].clone();
+    } else if(shapeType === "random") {
+      projectShapes[projectData.name] = shapeFn();
+      return projectShapes[projectData.name].clone();
+    }
+    else {
+      delete projectShapes[projectData.name];
+    }
+
     return shapeFn();
   }
 
@@ -57,7 +70,7 @@ define(['views/materials', 'settings'], function (materials, settings) {
   function createSphere(scale, projectData) {
     var position = generateRandomPosition();
 
-    var g = createoGeo();
+    var g = createoGeo(projectData);
 
     var material = materials(projectData);
 
