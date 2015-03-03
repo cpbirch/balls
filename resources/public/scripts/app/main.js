@@ -1,8 +1,8 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
         'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds',
-        'views/events', 'views/composer', 'views/snow',
+        'views/events', 'views/composer', 'views/snow', 'views/sky',
         'views/lights'],
-  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer, snow) {
+  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer, snow, sky) {
 
     var glitchEffectEnabled = false;
     var snowEffectEnabled = false;
@@ -29,6 +29,8 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
     }
 
     function start(cctrayurl, includeFilter, excludeFilter) {
+      sky.init();
+
       repo.pipelines(cctrayurl, includeFilter, excludeFilter)
         .then(function(d) {
           pipelines.init(d.healthy || []);

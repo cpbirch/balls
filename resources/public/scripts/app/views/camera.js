@@ -1,10 +1,15 @@
 define(['three'], function () {
 
-  var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 10000 );
-
   function defaultLocation(){
     return  {x: 0, y: 0, z: 200}
   };
+
+  var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.5, 2000000 );
+  camera.position.z = defaultLocation().z;
+  camera.position.y = defaultLocation().y;
+  camera.setLens(20);
+
 
   function moveCamera(to, duration) {
     new TWEEN.Tween(camera.position)
@@ -18,10 +23,6 @@ define(['three'], function () {
       .start();
   }
 
-  camera.position.z = defaultLocation().z;
-
-  camera.target = new THREE.Vector3();
-  camera.target.set( 0, 0, 0 );
   camera.___moveCamera = moveCamera;
 
   return camera;
