@@ -77,8 +77,9 @@ Not everyone prefers a ball. You can select one of the following shapes or let t
 People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
 
-1. Glitch effect (if 3 or more broken builds, configurable).
+1. Snow effect (if 3 or more broken or sick-building)
 2. Red alert (if 5 or more broken builds, configurable).
+3. Glitch effect (if 6 or more broken builds, configurable).
 
 ### UI Controls
 

@@ -1,10 +1,11 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
         'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds',
-        'views/events', 'views/composer', 'settings',
+        'views/events', 'views/composer', 'views/snow',
         'views/lights'],
-  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer) {
+  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer, snow) {
 
     var glitchEffectEnabled = false;
+    var snowEffectEnabled = false;
     function render() {
       TWEEN.update();
       renderer.render(scene, camera);
@@ -13,6 +14,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
       if (glitchEffectEnabled) { composer.render(); }
 
       pipelines.animate();
+      snow.animate(snowEffectEnabled);
     }
 
     function setEventListeners() {
@@ -55,8 +57,11 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
             sounds.play(d.healthy, d.sick, d['sick-building'], d['healthy-building']);
             return d;
           }).then(function(d) {
-            glitchEffectEnabled = d['glitch'];
+            glitchEffectEnabled = d.glitch
             events(d);
+            return d;
+          }).then(function(d) {
+            snowEffectEnabled = d.snow
           });
       }, 2000);
     }
