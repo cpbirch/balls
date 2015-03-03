@@ -156,6 +156,9 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
         var grp = nonGreenBuilds[name];
 
         if (grp) {
+          var sphere = sphereFromGroup(grp);
+          pipelineUpdater(sphere, {prognosis: 'healthy'});
+
           delete nonGreenBuilds[name];
           move(grp, {x: 0, y: 0, z: 0}, 2000, function () {
             scene.remove(grp)

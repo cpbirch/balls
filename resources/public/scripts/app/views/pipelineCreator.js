@@ -23,7 +23,7 @@ define(['views/materials', 'settings'], function (materials, settings) {
     torus: function() { return new THREE.TorusGeometry(0.32, 0.2, 7, 7, 6.3);},
     cylinder: function() { return new THREE.CylinderGeometry(0.31, 0.31, 0.8); },
     cone: function() { return new THREE.CylinderGeometry(0.31, 0, 0.85); },
-    coil: function() { return new THREE.TorusKnotGeometry(0.35, 0.05, 200, 10, _.random(1, 10), _.random(1, 15), 1); },
+    coil: function() { return new THREE.TorusKnotGeometry(0.30, 0.05, 200, 10, _.random(1, 10), _.random(1, 15), 1); },
     tetrahedron: function() { return new THREE.TetrahedronGeometry(0.5, 0);},
     octahedron: function() {return new THREE.OctahedronGeometry(0.5, 0)},
     ball: function() {return new THREE.PolyhedronGeometry(vertices(), faces(), 0.5, 3)}
@@ -48,7 +48,7 @@ define(['views/materials', 'settings'], function (materials, settings) {
       return projectShapes[projectData.name].clone();
     }
     else {
-      delete projectShapes[projectData.name];
+      projectShapes = {}
     }
 
     return shapeFn();
@@ -79,7 +79,7 @@ define(['views/materials', 'settings'], function (materials, settings) {
     mesh.scale.set(scale, scale, scale);
     mesh.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
 
-    var rotationAxis = new THREE.Vector3(.5 - Math.random(), .5 - Math.random(), .5 - Math.random());
+    var rotationAxis = new THREE.Vector3(_.random(0.5,2.5) - Math.random(), _.random(0.5,2.5) - Math.random(), _.random(0.5,2.5) - Math.random());
     rotationAxis.normalize();
 
     var rotationSpeed =.03 + .02 * Math.random();
