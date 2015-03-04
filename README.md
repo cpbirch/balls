@@ -71,43 +71,41 @@ You always have the ability to switch on/off either or both sounds.
 
 Not everyone prefers a ball. You can select one of the following shapes or let the app select one randomly.
 
-	ball, icosahedron, torus, cylinder, cone, coil, tetrahedron, octahedron
+	ball, icosahedron, torus, cylinder, cone, coil, tetrahedron, octahedron or random
 
 ### Events
 People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
 
-1. Snow effect (if 3 or more broken or sick-building)
-2. Red alert (if 5 or more broken builds, configurable).
-3. Glitch effect (if 6 or more broken builds, configurable).
+1. Clouds (if 1 or more broken or sick-building)
+2. Snow effect (if 3 or more broken or sick-building)
+3. Red alert (if 5 or more broken builds, configurable).
+4. Glitch effect (if 6 or more broken builds, configurable).
 
 ### UI Controls
 
-	1. Sound selection when build goes Red.
-	2. Sound selection when build goes from Orange to Green.
-	3. Custom Shapes
-	4. Toggle text rotation.
-	5. Attraction/Repulsion for all the green balls.
-	6. Custom thresholds for events.
-	7. Toggle Pulsating Balls (to be implemented)
-	8. Custom colors. (to be implemented).
+	- Sound selection when build goes Red.
+	- Sound selection when build goes from Orange to Green.
+	- Custom Shapes
+	- Toggle text rotation.
+	- Attraction/Repulsion for all the green balls.
+	- Custom thresholds for events.
+	- Custom colors. (to be implemented).
 
 ### Coming soon
 
 In the order in which they came to my mind.
 
-	1. Flame thrower/Ember effect/smoke/snow/rain (maybe, depends on performance)
-	2. Blame animations. (to be switched off by default)
-	3. Remove local storage dependency. (may move down on priority)
-	4. Webcam/Mic input. (I have a cunning plan)
-	5. Interactive balls. (low on priority, its a radiator first)
-	6. Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
-	7. Highlight inactive builds. (and not just by making them gray).
-	8. Display FPS (this is easy, should have done it from the start).
-	9. Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
-	10. Konami code. (Again, I have a cunning plan, and not just flipping the colors).
-
-Rewrite the entire thing in clojurescript.
+	- Make weather conditions based on some statistics and not just simple thresholds.
+	- Blame animations. (to be switched off by default)
+	- Remove local storage dependency. (may move down on priority)
+	- Webcam/Mic input. (I have a cunning plan)
+	- Interactive balls. (low on priority, its a radiator first)
+	- Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
+	- Highlight inactive builds. (and not just by making them gray).
+	- Display FPS (this is easy, should have done it from the start).
+	- Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
+	- Rewrite the entire thing in clojurescript.
 
 ### Known issues
 
