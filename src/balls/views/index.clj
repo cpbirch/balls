@@ -109,9 +109,40 @@
    [:label "shapes"]
    (shape-select-list "shape-type-list", all-shapes, "ball")
 
-   ;#shape-type-list
-
    ]))
+
+(defn- dark-clouds-vertex-shader []
+  [:script {:id "dark-cloud-vs" :type "x-shader/x-vertex"}
+   """
+  varying vec2 vUv;
+  void main() {
+               vUv = uv;
+               gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+               }
+  """])
+
+(defn- dark-clouds-fragment-shader []
+
+  [:script {:id "dark-cloud-fs" :type "x-shader/x-fragment"}
+   """
+  uniform sampler2D map;
+
+  uniform vec3 fogColor;
+  uniform float fogNear;
+  uniform float fogFar;
+
+  varying vec2 vUv;
+
+  void main() {
+               float depth = gl_FragCoord.z / gl_FragCoord.w;
+               float fogFactor = smoothstep( fogNear, fogFar, depth );
+
+               gl_FragColor = texture2D( map, vUv );
+               gl_FragColor.w *= pow( gl_FragCoord.z, 20.0 );
+               gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
+
+               }
+  """])
 
 (defn contents []
   (let [c (config-from-file)]
@@ -130,6 +161,9 @@
                  (preferences-section c)
 
                  [:div {:id "overlay"}]
+
+                 (dark-clouds-vertex-shader)
+                 (dark-clouds-fragment-shader)
 
                  [:script {:data-main "/scripts/app" :src "/scripts/lib/require.js"}])))
 
