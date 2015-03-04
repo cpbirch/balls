@@ -1,14 +1,12 @@
 define(['views/camera', 'views/scene'], function (camera, scene) {
-  var mesh, geometry, material;
 
-  var start_time;
   var moveFn;
   var moveOffset = 0.5;
+  var mesh;
 
   function init() {
     if (mesh) { return; }
     moveFn = moveRight;
-    start_time = Date.now();
 
     var texture = THREE.ImageUtils.loadTexture( '/images/cloud.png', null );
     texture.magFilter = THREE.LinearMipMapLinearFilter;
@@ -16,7 +14,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
 
     var fog = new THREE.Fog( 0x4584b4, - 100, 1000 );
 
-    material = new THREE.ShaderMaterial( {
+    var material = new THREE.ShaderMaterial( {
 
       uniforms: {
 
@@ -34,7 +32,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
 
     } );
 
-    geometry = new THREE.Geometry();
+    var geometry = new THREE.Geometry();
     var plane = new THREE.Mesh( new THREE.PlaneGeometry( 64, 64 ) );
 
     for ( var i = 0; i < 1500; i++ ) {
@@ -91,7 +89,6 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
         mesh = null;
       }
     }
-
   }
 
   function animate(cloudsEnabled) {
