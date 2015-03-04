@@ -101,7 +101,8 @@ define(['views/pipelineUpdater', 'views/pipelineCreator',
           move(grp, newPos, 2000);
         }
 
-        updatedCameraZLocation += groups.length == 1 ? 0 : 7;
+        updatedCameraZLocation += groups.length == 1 ? -10 : 3;
+        updatedCameraZLocation += groups.length > 5 ? 2 : 0;
 
         if (count === maxInCircle) {
           count = 0;
