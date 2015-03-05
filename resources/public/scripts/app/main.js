@@ -8,6 +8,8 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
     var glitchEffectEnabled = false;
     var snowEffectEnabled = false;
     var cloudEffectEnabled = false;
+    var nightTime = false;
+
     function render() {
       TWEEN.update();
       renderer.render(scene, camera);
@@ -18,6 +20,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
       pipelines.animate();
       snow.animate(snowEffectEnabled);
       clouds.animate(cloudEffectEnabled)
+      sky.update(nightTime)
     }
 
     function setEventListeners() {
@@ -68,6 +71,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
           }).then(function(d) {
             snowEffectEnabled = d.snow;
             cloudEffectEnabled = d.clouds;
+            nightTime = d.night;
           });
       }, 2000);
     }

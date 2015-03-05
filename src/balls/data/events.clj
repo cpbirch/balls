@@ -23,13 +23,11 @@
 (defn- add-snow-effect [{:keys [sick sick-building] :as grouped-pipelines}]
   (assoc grouped-pipelines :snow (snow-effect-over-threshold? nil (into sick sick-building))))
 
-(defn- priortize-effects [{:keys [glitch] :as grouped-pipelines}]
-  (if glitch
-    (assoc grouped-pipelines :snow false)
-    grouped-pipelines))
-
 (defn- add-cloud-effect [{:keys [sick sick-building] :as grouped-pipelines}]
   (assoc grouped-pipelines :clouds (cloud-effect-over-threshold? nil (into sick sick-building))))
+
+(defn- add-sun-effect [{:keys [sick sick-building] :as grouped-pipelines}]
+  (assoc grouped-pipelines :night (cloud-effect-over-threshold? nil (into sick sick-building))))
 
 (defn add-ui-events [{:keys [red-alert-threshold glitch-effect-threshold]} grouped-pipelines]
   (->> grouped-pipelines
@@ -37,4 +35,4 @@
       (add-glitch-effect glitch-effect-threshold)
       add-snow-effect
       add-cloud-effect
-      priortize-effects))
+      add-sun-effect))
