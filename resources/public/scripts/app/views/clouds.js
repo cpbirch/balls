@@ -4,13 +4,26 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
   var moveOffset = 0.5, originalMoveOffset = 0.5;
   var mesh;
 
+  function slowDown(currentSpeed, nextMoveFn, currentMoveFn) {
+    var newSpeed = currentSpeed;
+    moveFn = function() {
+      currentMoveFn(newSpeed)
+      if (newSpeed < -1) {
+        moveFn = nextMoveFn;
+      }
+      newSpeed -= 0.01;
+    }
+  }
+
   function init() {
     if (mesh) { return; }
     moveFn = function() {
-      mesh.position.x += 2;
-      moveUpDownFn();
-      if (mesh.position.x > -300) {
-        moveFn = moveRight;
+      if (mesh.position.x < -300) {
+        mesh.position.x += 2;
+      } else {
+        slowDown(2, moveRight, function(newOffset) {
+          mesh.position.x += newOffset;
+        })
       }
     };
 
@@ -44,7 +57,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     for ( var i = 0; i < 800; i++ ) {
 
       plane.position.x = Math.random() * 1000 - 500;
-      plane.position.y = - Math.random() * Math.random() * 200 - 50;
+      plane.position.y = - Math.random() * Math.random() * 200 - _.random(0, 40);
       plane.position.z = i;
       plane.rotation.z = Math.random() * Math.PI;
       plane.scale.x = plane.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
@@ -59,84 +72,21 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     scene.add( mesh );
   }
 
-  var moveUpDownFn = moveUp;
-  var moveUpDownOffset = 1, orignalMoveUpDownOffset = 1;
-
-  function moveUp() {
-    mesh.position.y += moveUpDownOffset;
-
-    if (mesh.position.y > 70) {
-      if (moveUpDownOffset > 0) {
-        moveUpDownOffset -= 0.1;
-      } else {
-        moveUpDownOffset = orignalMoveUpDownOffset;
-        moveUpDownFn = moveDown;
-      }
-    }
-  }
-
-  function moveDown() {
-    mesh.position.y -= moveUpDownOffset;
-
-    if (mesh.position.y < -50) {
-      if (moveUpDownOffset > 0) {
-        moveUpDownOffset -= 0.1;
-      } else {
-        moveUpDownOffset = orignalMoveUpDownOffset;
-        moveUpDownFn = moveUp;
-      }
-    }
-  }
-
   function moveRight() {
     mesh.position.x += moveOffset;
-    moveUpDownFn();
     if (mesh.position.x > 230) {
-      if (moveOffset > 0) {
-        moveOffset -= 0.1;
-      } else {
-        moveOffset = originalMoveOffset;
-        moveFn = moveBack;
-      }
-    }
-  }
-
-  function moveBack() {
-    mesh.position.z -= moveOffset;
-    moveUpDownFn();
-    if (mesh.position.z < 100) {
-      if (moveOffset > 0) {
-        moveOffset -= 0.1;
-      } else {
-        moveOffset = originalMoveOffset;
-        moveFn = moveLeft;
-      }
+      slowDown(moveOffset, moveLeft, function(newOffset) {
+        mesh.position.x += newOffset;
+      });
     }
   }
 
   function moveLeft() {
     mesh.position.x -= moveOffset;
-    moveUpDownFn();
     if (mesh.position.x < -200) {
-      if (moveOffset > 0) {
-        moveOffset -= 0.1;
-      } else {
-        moveOffset = originalMoveOffset;
-        moveFn = moveForward;
-      }
-    }
-  }
-
-  function moveForward() {
-    mesh.position.z += moveOffset;
-    moveUpDownFn();
-    if (mesh.position.z > 100) {
-      if (moveOffset > 0) {
-        moveOffset -= 0.1;
-      } else {
-        moveOffset = originalMoveOffset;
-        moveFn = moveRight;
-      }
+      slowDown(moveOffset, moveRight, function(newOffset) {
+        mesh.position.x -= newOffset;
+      });
     }
   }
 
@@ -160,7 +110,6 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
   }
 
   return {
-    init: init,
     animate: animate
   }
 });

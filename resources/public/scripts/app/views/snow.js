@@ -10,7 +10,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     var sprite4 = THREE.ImageUtils.loadTexture("/images/snowflake4.png");
     var sprite5 = THREE.ImageUtils.loadTexture("/images/snowflake5.png");
 
-    for (i = 0; i < 5000; i++) {
+    for (var i = 0; i < 4000; i++) {
 
       var vertex = new THREE.Vector3();
       vertex.x = Math.random() * 2000 - 1000;
@@ -63,21 +63,31 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     snowParticles = [];
   }
 
+  var snowSpeedMultiplier = 0.00005;
+  function updateSnowSpeed(blizzardEffectEnabled) {
+    if (blizzardEffectEnabled) {
+      snowSpeedMultiplier = 0.0005;
+    } else {
+      snowSpeedMultiplier = 0.00005
+    }
+  }
+
   function startSnowing() {
     if (snowParticles.length === 0) {
       init();
     }
 
-    var time = Date.now() * 0.00000005;
-    snowParticles.forEach(function (sp) {
+    var time = Date.now() * snowSpeedMultiplier;
+    snowParticles.forEach(function (sp, i) {
       sp.rotation.y = time * ( i < 4 ? i + 1 : -( i + 1 ) );
     });
   }
 
-  function animate(snowEffectEnabled) {
+  function animate(snowEffectEnabled, blizzardEffectEnabled) {
 
     if (snowEffectEnabled) {
       startSnowing();
+      updateSnowSpeed(blizzardEffectEnabled)
     } else {
       stopSnowing();
     }

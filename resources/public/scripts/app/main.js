@@ -8,6 +8,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
     var glitchEffectEnabled = false;
     var snowEffectEnabled = false;
     var cloudEffectEnabled = false;
+    var blizzardEffectEnabled = false;
     var nightTime = false;
 
     function render() {
@@ -18,7 +19,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
       if (glitchEffectEnabled) { composer.render(); }
 
       pipelines.animate();
-      snow.animate(snowEffectEnabled);
+      snow.animate(snowEffectEnabled, blizzardEffectEnabled);
       clouds.animate(cloudEffectEnabled)
       sky.update(nightTime)
     }
@@ -70,6 +71,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
             return d;
           }).then(function(d) {
             snowEffectEnabled = d.snow;
+            blizzardEffectEnabled = d.blizzard;
             cloudEffectEnabled = d.clouds;
             nightTime = d.night;
           });
