@@ -8,7 +8,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
 
     var geom2 = new THREE.Geometry();
 
-    var material2 = new THREE.PointCloudMaterial({
+    var rainMaterial = new THREE.PointCloudMaterial({
       size: 1,
       transparent: true,
       depthTest: false,
@@ -16,8 +16,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
       blending: THREE.AdditiveBlending
     });
 
-    material2.color.setHSL(1.0, 0.2, 0.5);
-
+    rainMaterial.color.setHSL(1.0, 0.2, 0.5);
 
     for (var i = 0; i < 6000; i++) {
       var particle = new THREE.Vector3();
@@ -31,10 +30,8 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
       geom2.vertices.push(particle);
     }
 
-
-    rain = new THREE.ParticleSystem(geom2, material2);
+    rain = new THREE.PointCloud(geom2, rainMaterial);
     rain.sortParticles = true;
-
     scene.add(rain);
   }
 
@@ -53,6 +50,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
 
   function stopRaining() {
     if (!rain) return;
+
     var vertices = rain.geometry.vertices;
     var dropsThatAreNotVisible = 0;
     vertices.forEach(function (v) {
