@@ -1,12 +1,18 @@
 define(['views/camera', 'views/scene'], function (camera, scene) {
 
   var moveFn;
-  var moveOffset = 0.5;
+  var moveOffset = 0.5, originalMoveOffset = 0.5;
   var mesh;
 
   function init() {
     if (mesh) { return; }
-    moveFn = moveRight;
+    moveFn = function() {
+      mesh.position.x += 2;
+      moveUpDownFn();
+      if (mesh.position.x > -300) {
+        moveFn = moveRight;
+      }
+    };
 
     var texture = THREE.ImageUtils.loadTexture( '/images/cloud.png', null );
     texture.magFilter = THREE.LinearMipMapLinearFilter;
@@ -35,7 +41,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     var geometry = new THREE.Geometry();
     var plane = new THREE.Mesh( new THREE.PlaneGeometry( 64, 64 ) );
 
-    for ( var i = 0; i < 1500; i++ ) {
+    for ( var i = 0; i < 800; i++ ) {
 
       plane.position.x = Math.random() * 1000 - 500;
       plane.position.y = - Math.random() * Math.random() * 200 - 50;
@@ -49,35 +55,88 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     }
 
     mesh = new THREE.Mesh( geometry, material );
+    mesh.position.x = -1000;
     scene.add( mesh );
   }
 
+  var moveUpDownFn = moveUp;
+  var moveUpDownOffset = 1, orignalMoveUpDownOffset = 1;
+
+  function moveUp() {
+    mesh.position.y += moveUpDownOffset;
+
+    if (mesh.position.y > 70) {
+      if (moveUpDownOffset > 0) {
+        moveUpDownOffset -= 0.1;
+      } else {
+        moveUpDownOffset = orignalMoveUpDownOffset;
+        moveUpDownFn = moveDown;
+      }
+    }
+  }
+
+  function moveDown() {
+    mesh.position.y -= moveUpDownOffset;
+
+    if (mesh.position.y < -50) {
+      if (moveUpDownOffset > 0) {
+        moveUpDownOffset -= 0.1;
+      } else {
+        moveUpDownOffset = orignalMoveUpDownOffset;
+        moveUpDownFn = moveUp;
+      }
+    }
+  }
 
   function moveRight() {
     mesh.position.x += moveOffset;
+    moveUpDownFn();
     if (mesh.position.x > 230) {
-      moveFn = moveBack;
+      if (moveOffset > 0) {
+        moveOffset -= 0.1;
+      } else {
+        moveOffset = originalMoveOffset;
+        moveFn = moveBack;
+      }
     }
   }
 
   function moveBack() {
     mesh.position.z -= moveOffset;
+    moveUpDownFn();
     if (mesh.position.z < 100) {
-      moveFn = moveLeft;
+      if (moveOffset > 0) {
+        moveOffset -= 0.1;
+      } else {
+        moveOffset = originalMoveOffset;
+        moveFn = moveLeft;
+      }
     }
   }
 
   function moveLeft() {
     mesh.position.x -= moveOffset;
+    moveUpDownFn();
     if (mesh.position.x < -200) {
-      moveFn = moveForward;
+      if (moveOffset > 0) {
+        moveOffset -= 0.1;
+      } else {
+        moveOffset = originalMoveOffset;
+        moveFn = moveForward;
+      }
     }
   }
 
   function moveForward() {
     mesh.position.z += moveOffset;
+    moveUpDownFn();
     if (mesh.position.z > 100) {
-      moveFn = moveRight;
+      if (moveOffset > 0) {
+        moveOffset -= 0.1;
+      } else {
+        moveOffset = originalMoveOffset;
+        moveFn = moveRight;
+      }
     }
   }
 

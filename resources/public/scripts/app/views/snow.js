@@ -10,7 +10,7 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     var sprite4 = THREE.ImageUtils.loadTexture("/images/snowflake4.png");
     var sprite5 = THREE.ImageUtils.loadTexture("/images/snowflake5.png");
 
-    for (i = 0; i < 10000; i++) {
+    for (i = 0; i < 5000; i++) {
 
       var vertex = new THREE.Vector3();
       vertex.x = Math.random() * 2000 - 1000;
