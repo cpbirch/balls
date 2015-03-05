@@ -36,6 +36,11 @@
 (defn- add-night-effect [{:keys [sick sick-building] :as grouped-pipelines}]
   (assoc grouped-pipelines :night (night-effect-over-threshold? nil (into sick sick-building))))
 
+(defn- add-rain-effect [{:keys [sick sick-building snow] :as grouped-pipelines}]
+  (if snow
+    (assoc grouped-pipelines :rain false)
+    (assoc grouped-pipelines :rain (night-effect-over-threshold? nil (into sick sick-building)))))
+
 (defn add-ui-events [{:keys [red-alert-threshold glitch-effect-threshold]} grouped-pipelines]
   (->> grouped-pipelines
       (add-red-alert red-alert-threshold)
@@ -44,4 +49,4 @@
       add-blizzard-effect
       add-cloud-effect
       add-night-effect
-      ))
+      add-rain-effect))

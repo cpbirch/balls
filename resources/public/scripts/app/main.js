@@ -1,15 +1,17 @@
 define(['views/pipelines', 'views/camera', 'views/renderer',
         'views/scene', 'repository', 'views/nonGreenBuilds', 'sounds',
         'views/events', 'views/composer', 'views/snow', 'views/sky',
-        'views/clouds',
+        'views/clouds', 'views/rain',
         'views/lights'],
-  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer, snow, sky, clouds) {
+  function (pipelines, camera, renderer, scene, repo, nonGreenBuilds, sounds, events, composer, snow, sky, clouds,
+  rain) {
 
     var glitchEffectEnabled = false;
     var snowEffectEnabled = false;
     var cloudEffectEnabled = false;
     var blizzardEffectEnabled = false;
     var nightTime = false;
+    var rainEffectEnabled = false;
 
     function render() {
       TWEEN.update();
@@ -21,7 +23,8 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
       pipelines.animate();
       snow.animate(snowEffectEnabled, blizzardEffectEnabled);
       clouds.animate(cloudEffectEnabled)
-      sky.update(nightTime)
+      sky.update(nightTime);
+      rain.animate(rainEffectEnabled);
     }
 
     function setEventListeners() {
@@ -74,6 +77,7 @@ define(['views/pipelines', 'views/camera', 'views/renderer',
             blizzardEffectEnabled = d.blizzard;
             cloudEffectEnabled = d.clouds;
             nightTime = d.night;
+            rainEffectEnabled = d.rain;
           });
       }, 2000);
     }

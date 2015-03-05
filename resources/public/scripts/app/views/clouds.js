@@ -1,8 +1,6 @@
 define(['views/camera', 'views/scene'], function (camera, scene) {
 
-  var moveFn;
-  var moveOffset = 0.5, originalMoveOffset = 0.5;
-  var mesh;
+  var moveFn, moveOffset = 0.5,mesh;
 
   function slowDown(currentSpeed, nextMoveFn, currentMoveFn) {
     var newSpeed = currentSpeed;
@@ -54,10 +52,10 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
     var geometry = new THREE.Geometry();
     var plane = new THREE.Mesh( new THREE.PlaneGeometry( 64, 64 ) );
 
-    for ( var i = 0; i < 800; i++ ) {
+    for ( var i = 0; i < 750; i++ ) {
 
-      plane.position.x = Math.random() * 1000 - 500;
-      plane.position.y = - Math.random() * Math.random() * 200 - _.random(0, 40);
+      plane.position.x = Math.random() * 1000 - 400;
+      plane.position.y = Math.random() * 400;
       plane.position.z = i;
       plane.rotation.z = Math.random() * Math.PI;
       plane.scale.x = plane.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
@@ -92,8 +90,8 @@ define(['views/camera', 'views/scene'], function (camera, scene) {
 
   function disperse() {
     if (mesh) {
-      mesh.position.y -= 1.8;
-      if (mesh.position.y < -200) {
+      mesh.position.y += 1.8;
+      if (mesh.position.y > 400) {
         scene.remove(mesh);
         mesh = null;
       }
