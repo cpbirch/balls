@@ -9,8 +9,8 @@ Put this on your TV, and you will never go back to any other build radiator.
 
 ### Screenshots - That do not do justice
 
-![Green balls](docs/all-green-balls.png)
-![Building balls](docs/balls-building.png)
+![Rainy Day](docs/rainy-day.png)
+![Snow Day](docs/snowy-day.png)
 
 ### Supported CI Servers
 
@@ -73,14 +73,20 @@ Not everyone prefers a ball. You can select one of the following shapes or let t
 
 	ball, icosahedron, torus, cylinder, cone, coil, tetrahedron, octahedron or random
 
+### Weather
+
+The monitor displays weather conditions based on the status of your builds.
+
+	sunny, cloudy, rainy, snow, blizzard
+
+	meteor showers(coming soon)
+
 ### Events
 People sometimes prefer to have sounds switched off.
 These events are meant to attract your attention to broken builds visually.
 
-1. Clouds (if 1 or more broken or sick-building)
-2. Snow effect (if 3 or more broken or sick-building)
-3. Red alert (if 5 or more broken builds, configurable).
-4. Glitch effect (if 6 or more broken builds, configurable).
+1. Red alert (if 5 or more broken builds, configurable).
+2. Glitch effect (if 6 or more broken builds, configurable).
 
 ### UI Controls
 
