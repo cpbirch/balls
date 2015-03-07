@@ -94,14 +94,14 @@
 
    [:label "red alert threshold"]
    (if-not red-alert-threshold
-     (build-count-list "red-alert-threshold" 20 events/default-red-alert-threshold)
+     (build-count-list "red-alert-threshold" 20 (events/default-threshold-for :red-alert))
      [:label {:id "red-alert-threshold-disabled"} " can only be updated in config file."])
 
    [:br]
 
    [:label "glitch effect threshold"]
    (if-not glitch-effect-threshold
-     (build-count-list "glitch-effect-threshold" 20 events/default-glitch-effect-threshold)
+     (build-count-list "glitch-effect-threshold" 20 (events/default-threshold-for :glitch))
      [:label {:id "glitch-effect-threshold-disabled"} " can only be updated in config file."])
 
    [:br]

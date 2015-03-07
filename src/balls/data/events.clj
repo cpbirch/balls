@@ -1,52 +1,51 @@
 (ns balls.data.events)
 
-(def default-snow-effect-threshold 3)
-(def default-blizzard-effect-threshold 4)
-(def default-cloud-effect-threshold 1)
-(def default-night-effect-threshold 2)
-(def default-red-alert-threshold 5)
-(def default-glitch-effect-threshold 6)
+(def count-builds (partial apply +))
+(def remove-nils (partial remove nil?))
 
-(defn- count-over-threshold? [default-threshold threshold coll]
-  (let [t (or threshold default-threshold)]
-    (> (inc (count coll)) t 0)))
+(defn- count-build-types [build-type grouped-pipelines]
+  (-> grouped-pipelines
+      (get build-type)
+      count))
 
-(def red-alert-over-threshold? (partial count-over-threshold? default-red-alert-threshold))
-(def glitch-effect-over-threshold? (partial count-over-threshold? default-glitch-effect-threshold))
-(def snow-effect-over-threshold? (partial count-over-threshold? default-snow-effect-threshold))
-(def blizzard-effect-over-threshold? (partial count-over-threshold? default-blizzard-effect-threshold))
-(def cloud-effect-over-threshold? (partial count-over-threshold? default-cloud-effect-threshold))
-(def night-effect-over-threshold? (partial count-over-threshold? default-night-effect-threshold))
+(def sick-building-count (partial count-build-types :sick-building))
+(def sick-count (partial count-build-types :sick))
+(def sick-and-sick-building-count (comp count-builds remove-nils (juxt sick-count sick-building-count)))
 
-(defn- add-red-alert [red-alert-threshold {:keys [sick] :as grouped-pipelines}]
-  (assoc grouped-pipelines :red-alert (red-alert-over-threshold? red-alert-threshold sick)))
+(def events {:clouds         [sick-and-sick-building-count 1 :no-override]
+             :night          [sick-and-sick-building-count 2 :no-override]
+             :rain           [sick-and-sick-building-count 2 :no-override]
+             :snow           [sick-and-sick-building-count 3 :no-override]
+             :blizzard       [sick-and-sick-building-count 4 :no-override]
+             :red-alert      [sick-count 5 :red-alert-threshold]
+             :glitch         [sick-count 6 :glitch-effect-threshold]})
 
-(defn- add-glitch-effect [glitch-effect-threshold {:keys [sick] :as grouped-pipelines}]
-  (assoc grouped-pipelines :glitch (glitch-effect-over-threshold? glitch-effect-threshold sick)))
+(defn default-threshold-for [event]
+  (-> (event events) second))
 
-(defn- add-snow-effect [{:keys [sick sick-building] :as grouped-pipelines}]
-  (assoc grouped-pipelines :snow (snow-effect-over-threshold? nil (into sick sick-building))))
+(defn- over-threshold?
+  [default-threshold threshold count]
+  (> (inc count) (or threshold default-threshold) 0))
 
-(defn- add-blizzard-effect [{:keys [sick sick-building] :as grouped-pipelines}]
-  (assoc grouped-pipelines :blizzard (blizzard-effect-over-threshold? nil (into sick sick-building))))
+(defn- count-builds-for-event
+  [override-thresholds grouped-pipelines [event [count-fn default-threshold override-threshold-key]]]
+  (let [override-threshold (override-threshold-key override-thresholds)
+        over-threshold-fn (comp (partial over-threshold? default-threshold override-threshold)
+                                count-fn)]
+    [event (over-threshold-fn grouped-pipelines)]))
 
-(defn- add-cloud-effect [{:keys [sick sick-building] :as grouped-pipelines}]
-  (assoc grouped-pipelines :clouds (cloud-effect-over-threshold? nil (into sick sick-building))))
-
-(defn- add-night-effect [{:keys [sick sick-building] :as grouped-pipelines}]
-  (assoc grouped-pipelines :night (night-effect-over-threshold? nil (into sick sick-building))))
-
-(defn- add-rain-effect [{:keys [sick sick-building snow] :as grouped-pipelines}]
+(defn- priortize-events
+  [{:keys [snow] :as events}]
   (if snow
-    (assoc grouped-pipelines :rain false)
-    (assoc grouped-pipelines :rain (night-effect-over-threshold? nil (into sick sick-building)))))
+    (assoc events :rain false)
+    events))
 
-(defn add-ui-events [{:keys [red-alert-threshold glitch-effect-threshold]} grouped-pipelines]
-  (->> grouped-pipelines
-      (add-red-alert red-alert-threshold)
-      (add-glitch-effect glitch-effect-threshold)
-      add-snow-effect
-      add-blizzard-effect
-      add-cloud-effect
-      add-night-effect
-      add-rain-effect))
+(defn calculate-events [override-thresholds grouped-pipelines]
+  (->> events
+       (map (partial count-builds-for-event override-thresholds grouped-pipelines))
+       (into {})
+       priortize-events))
+
+(defn add-ui-events [override-thresholds grouped-pipelines]
+  (merge grouped-pipelines
+         (calculate-events override-thresholds grouped-pipelines)))
