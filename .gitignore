@@ -7,3 +7,4 @@ target/
 .nrep*
 resources/*.xml
 config.json
+videos
