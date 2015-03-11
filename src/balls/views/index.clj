@@ -1,7 +1,7 @@
 (ns balls.views.index
   (:require [balls.views.layout :refer [view-layout]]
             [balls.config :refer [config-from-file default-breaking-build-sound default-success-from-broken-build-sound]]
-            [balls.sounds :as sounds]
+            [balls.media :as media]
             [balls.data.events :as events])
   (:use [hiccup.core]))
 
@@ -42,10 +42,13 @@
       [:option (assoc option-attrs :selected "selected") name]
       [:option option-attrs name])))
 
-(defn- sound-select-list [elm-id all-sounds default-sound-name]
-  [:select {:id elm-id}
-   [:option {:value "none"} "do not play"]
-   (map (partial options-for-select-list default-sound-name) all-sounds)])
+(defn- media-select-list
+  ([elm-id all-media]
+    (media-select-list elm-id all-media nil))
+  ([elm-id all-media default-name]
+    [:select {:id elm-id}
+     [:option {:value "none"} "do not play"]
+     (map (partial options-for-select-list default-name) all-media)]))
 
 (defn- shape-select-list [elm-id all-shapes default-shape]
   [:select {:id elm-id}
@@ -62,18 +65,27 @@
    (map (partial options-for-count selected-build-count) (range 1 (inc number-of-builds)))])
 
 (defn- preferences-section [{:keys [red-alert-threshold glitch-effect-threshold]}]
-  (let [all-sounds (sounds/all)
+  (let [all-sounds (media/all-sounds)
+        all-videos (media/all-videos)
         all-shapes ["icosahedron", "torus", "cylinder", "cone", "coil", "tetrahedron", "octahedron", "ball", "random"]]
 
   [:div {:id "preferences"}
 
    [:label "balls breaking sound"]
-   (sound-select-list "broken-build-sound-list", all-sounds, default-breaking-build-sound)
+   (media-select-list "broken-build-sound-list", all-sounds, default-breaking-build-sound)
 
    [:br]
 
    [:label "breaking to healthy balls sound"]
-   (sound-select-list "sick-to-healthy-build-sound-list", all-sounds, default-success-from-broken-build-sound)
+   (media-select-list "sick-to-healthy-build-sound-list", all-sounds, default-success-from-broken-build-sound)
+
+   [:br]
+
+   [:label "stand up"]
+   (media-select-list "standup-list", (merge all-videos all-sounds))
+
+   [:label "stand up time"]
+   [:input {:type "time" :id "standup-time"}]
 
    [:br]
 
@@ -161,6 +173,7 @@
                  (preferences-section c)
 
                  [:div {:id "overlay"}]
+                 [:div {:id "video-overlay"}]
 
                  (dark-clouds-vertex-shader)
                  (dark-clouds-fragment-shader)

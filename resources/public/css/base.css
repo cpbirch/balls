@@ -196,3 +196,15 @@ body {
 #interface, #preferences-control, #preferences, #config-interface {
   z-index: 99;
 }
+
+#video-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+video {
+  display: none;
+}

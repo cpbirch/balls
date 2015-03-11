@@ -1,4 +1,4 @@
-define(['jquery'], function() {
+define(['views/timedEvents', 'jquery'], function(timedEvents) {
 
   var overlay = $('#overlay');
 
@@ -13,6 +13,7 @@ define(['jquery'], function() {
   function handleEvents(data) {
     triggerRedAlert(data['red-alert']);
 
+    timedEvents.play();
   };
 
   return handleEvents;

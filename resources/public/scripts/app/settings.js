@@ -16,8 +16,12 @@ define(['store', 'jquery', 'lodash'], function (store) {
   var selectListFields = {
     brokenBuildSound: $('#broken-build-sound-list'),
     brokenToHealthySound: $('#sick-to-healthy-build-sound-list'),
-    shapeType: $('#shape-type-list')
+    shapeType: $('#shape-type-list'),
+    standUpMedia: $('#standup-list')
   };
+
+  var standUpTimeField = $('#standup-time');
+  var standUpTimeKey = 'standUpTime'
 
   var checkedPreferences = {
     rotateNonGreenText: $('#rotate-non-green-text')
@@ -46,6 +50,9 @@ define(['store', 'jquery', 'lodash'], function (store) {
 
     v = store.get(glitchEffectThresholdKey);
     if (v) { glitchEffectThresholdField.val(v) }
+
+    v = store.get(standUpTimeKey);
+    if (v) { standUpTimeField.val(v) }
 
     _.each(selectListFields, function(field, storeKey) {
       var previousSelection = store.get(storeKey);
@@ -88,6 +95,10 @@ define(['store', 'jquery', 'lodash'], function (store) {
       store.save(redAlertThresholdKey, redAlertThresholdField.val())
     });
 
+    standUpTimeField.on('change', function() {
+      store.save(standUpTimeKey, standUpTimeField.val())
+    });
+
     _.each(checkedPreferences, function (field, storeKey) {
       field.on('click', function () {
         store.save(storeKey, checkedToStoreVal(field));
@@ -109,7 +120,13 @@ define(['store', 'jquery', 'lodash'], function (store) {
     selectedBrokenToHealtySound: function() { return selectListFields.brokenToHealthySound.val(); },
     glitchEffectThreshold: function() { return effectsThreshold(glitchEffectThresholdField); },
     redAlertThreshold: function() { return effectsThreshold(redAlertThresholdField); },
-    shapeType: function() { return selectListFields.shapeType.val(); }
+    shapeType: function() { return selectListFields.shapeType.val(); },
+    standup: function() {
+      return {
+        media: selectListFields.standUpMedia.val(),
+        time: standUpTimeField.val()
+      };
+    }
   }
 
 });

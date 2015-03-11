@@ -67,7 +67,8 @@ define(["settings"], function(settings) {
   }
 
   return {
-    play: play
+    play: play,
+    playSound: playSound
   };
 
 });

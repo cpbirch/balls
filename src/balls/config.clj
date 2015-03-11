@@ -1,11 +1,11 @@
 (ns balls.config
   (:require [clojure.data.json :refer [read-str]]
             [clojure.java.io :refer [as-file]]
-            [balls.sounds :as sounds]))
+            [balls.media :as media]))
 
 (def config-file "resources/config/config.json")
-(def default-breaking-build-sound (sounds/normalize-name "wario_ah_hahaha_wonderful.wav"));
-(def default-success-from-broken-build-sound (sounds/normalize-name "mario_woo_hoo.wav"));
+(def default-breaking-build-sound (media/normalize-name "wario_ah_hahaha_wonderful.wav"));
+(def default-success-from-broken-build-sound (media/normalize-name "mario_woo_hoo.wav"));
 
 (def ^:private -config (atom {}))
 
