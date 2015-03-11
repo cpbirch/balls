@@ -88,6 +88,14 @@ These events are meant to attract your attention to broken builds visually.
 1. Red alert (if 5 or more broken builds, configurable).
 2. Glitch effect (if 6 or more broken builds, configurable).
 
+### Timed Events
+These are events (play video or sound) that are executed once a day, at a configurable time, during weekdays.
+Currently available timed events:
+
+	stand up.
+
+	Custom timed events to be implemented.
+
 ### UI Controls
 
 	- Sound selection when build goes Red.
