@@ -11,6 +11,7 @@ Put this on your TV, and you will never go back to any other build radiator.
 
 ![Rainy Day](docs/rainy-day.png)
 ![Snow Day](docs/snowy-day.png)
+![All Green](docs/all-green-balls.png)
 
 ### Supported CI Servers
 
