@@ -174,6 +174,7 @@
 
                  [:div {:id "overlay"}]
                  [:div {:id "video-overlay"}]
+                 [:div {:id "error-overlay"}]
 
                  (dark-clouds-vertex-shader)
                  (dark-clouds-fragment-shader)

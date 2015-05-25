@@ -13,7 +13,15 @@ define(['settings'], function (settings) {
       select: filter,
       exclude: exclude,
       "red-alert-threshold": settings.redAlertThreshold(),
-      "glitch-effect-threshold": settings.glitchEffectThreshold()
+      "glitch-effect-threshold": settings.glitchEffectThreshold(),
+      timeout: 3000
+    }).fail(function() {
+      $('#error-overlay')
+          .html("<span>Unable to fetch information from: </span>" + "<span>" + cctrayUrl +"</span>")
+          .addClass("error-alert")
+          .show(300);
+    }).done(function() {
+      $('#error-overlay').hide(300);
     });
   }
 

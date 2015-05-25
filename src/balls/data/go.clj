@@ -28,7 +28,9 @@
 
 (defn find-names
   [{:keys [url select exclude]}]
-  {:names (->> (interesting-projects url select exclude) (map :name))})
+  (if-not (empty? url)
+    {:names (->> (interesting-projects url select exclude) (map :name))}
+    {:name []}))
 
 (defn get-filtered-projects
   [{:keys [url select exclude] :as params}]
