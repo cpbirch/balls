@@ -46,6 +46,20 @@ Thanks to [clj-cctray](https://github.com/build-canaries/clj-cctray)
 
 	You cannot override cctray url. You can still do custom include/exclude from browser.
 
+### Security
+	Well not really. Just a workaround.
+
+	It is only needed if your CI server requires username/password. Ignore otherwise.
+
+	1. Create resources/config/username file.
+	2. Create resources/config/password file.
+	3. Start the radiator server and delete the files afterwords.
+
+	The server keeps things in memory and uses it to send requests to CI server.
+	So, if you need to restart radiator server again, the credential files will need to exist at time of startup.
+
+	Note: Only tested with Go CI Server.
+
 ### Sounds
 
 Sounds are played on 2 different events.
@@ -113,14 +127,12 @@ In the order in which they came to my mind.
 
 	- Make weather conditions based on some statistics and not just simple thresholds.
 	- Blame animations. (to be switched off by default)
-	- Remove local storage dependency. (may move down on priority)
 	- Webcam/Mic input. (I have a cunning plan)
 	- Interactive balls. (low on priority, its a radiator first)
 	- Statistics (Eg. who broke the most builds. If your team member, takes this personally, then .... switch if off.)
 	- Highlight inactive builds. (and not just by making them gray).
 	- Display FPS (this is easy, should have done it from the start).
 	- Special animations for when A Build breaks way too many times.(Can build on this for other scenarios.)
-	- Rewrite the entire thing in clojurescript.
 
 ### Known issues
 
@@ -131,6 +143,12 @@ In the order in which they came to my mind.
 
 3. The radiator has been tested with 200 simultaneous builds.
    If you suffer performance issue, filter pipelines out.
+
+4. WebGl may not work nicely for long period of time.
+	Depending on your client machine, you may see messages like ` Webgl hit a snag ` or ` Lost Webgl context `.
+	Only solution at this time is to just reload the page.
+	This is an inconsistent behavior and I have personally seen it happen only on 1 machine that was over 5 years old.
+	Like an old saying by a developer, "It works on my machine....".
 
 
 ### License

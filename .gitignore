@@ -8,3 +8,5 @@ target/
 resources/*.xml
 config.json
 videos
+username
+password
