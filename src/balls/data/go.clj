@@ -20,8 +20,10 @@
 		{"Authorization" (str "Basic " (base64/encode (clj-str/join ":" credentials)))}))
 
 (defn fetch-cctray [url]
-	[(:body (client/get url {:headers (merge {"Accept" "application/xml"} (basic-auth-header)) :as :stream :insecure? true}))
-	 (server/type url)])
+	(let [server-type (server/type url)]
+		(if (= :unknown server-type)
+			[url server-type]
+			[(:body (client/get url {:timeout 10000 :headers (merge {"Accept" "application/xml"} (basic-auth-header)) :as :stream :insecure? true})) server-type])))
 
 (defn parse-cctray [[xml-data server-type]]
 	(parser/get-projects xml-data {:normalise :all :server server-type}))
