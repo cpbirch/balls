@@ -19,11 +19,16 @@
 	(when-let [credentials (config/credentials)]
 		{"Authorization" (str "Basic " (base64/encode (clj-str/join ":" credentials)))}))
 
-(defn fetch-cctray [url]
-	(let [server-type (server/type url)]
-		(if (= :unknown server-type)
-			[url server-type]
-			[(:body (client/get url {:timeout 10000 :headers (merge {"Accept" "application/xml"} (basic-auth-header)) :as :stream :insecure? true})) server-type])))
+(def headers (merge {"Accept" "application/xml"} (basic-auth-header)))
+
+
+(defn fetch-cctray [url server-type]	
+	(if (= :unknown server-type)
+		[url server-type]
+		[(:body (client/get 
+			url 
+			{:timeout 10000 :headers headers :as :stream :insecure? true})) 
+		server-type]))
 
 (defn parse-cctray [[xml-data server-type]]
 	(parser/get-projects xml-data {:normalise :all :server server-type}))
@@ -36,10 +41,24 @@
 		(let [by-name #(re-matches (re-pattern exclude-pattern) (:name %))]
 			(->> projects (remove by-name)))))
 
+(defn- replace-spaces-with-hyphens [string]
+	(clj-str/replace string #"\s" "-"))
+
+(defn- add-stage-to-name [{name :name stage :stage :as data}]
+	(let [name-with-stage (replace-spaces-with-hyphens (str name "-" stage))]
+		(assoc data :name (str name "-" stage))))
+
+(defn- add-stage-to-name-if-snap [data, server-type]
+	(if (= :snap server-type)
+		(map add-stage-to-name data)
+		data))
+
 (defn- interesting-projects [url select-pattern exclude-pattern]
-	(-> (all-projects url)
+	(let [server-type (server/type url)]
+		(-> (all-projects url server-type)
 			(select-projects select-pattern)
-			(exclude-projects exclude-pattern)))
+			(exclude-projects exclude-pattern)
+			(add-stage-to-name-if-snap server-type))))
 
 (defn find-names
 	[{:keys [url select exclude]}]
