@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [compojure "1.1.5"]
                  [hiccup "1.0.4"]
-                 [clj-cctray "0.8.0"]
+                 [clj-cctray "0.9.1"]
                  [ring/ring-json "0.3.1"]
                  [org.clojure/data.json "0.2.5"]
                  [base64-clj "0.1.1"]
