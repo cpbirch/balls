@@ -24,5 +24,7 @@
 
   :ring {:handler balls.app/app}
 
-  :main balls.core)
+  :main balls.core
+  :aot :all
+  :uberjar-name "balls-standalone.jar")
 
