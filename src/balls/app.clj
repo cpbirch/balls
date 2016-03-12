@@ -7,8 +7,7 @@
             [cheshire.core :refer [generate-string]]
             [cheshire.generate :as cheshire])
   (:use [compojure.core])
-  (import org.joda.time.DateTime)
-  )
+  (import org.joda.time.DateTime))
 
 (cheshire/add-encoder DateTime (fn [date json-generator]
                                  (.writeString json-generator (.toString date))))
