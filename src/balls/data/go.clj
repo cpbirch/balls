@@ -41,24 +41,28 @@
 		(let [by-name #(re-matches (re-pattern exclude-pattern) (:name %))]
 			(->> projects (remove by-name)))))
 
-(defn- replace-spaces-with-hyphens [string]
-	(clj-str/replace string #"\s" "-"))
+(defn- with-stage
+  [{:keys [name stage] :as data}]
+  (assoc data :name (format "%s%s%s" name (config/stage-delimiter) stage)))
 
-(defn- add-stage-to-name [{name :name stage :stage :as data}]
-	(let [name-with-stage (replace-spaces-with-hyphens (str name "-" stage))]
-		(assoc data :name (str name "-" stage))))
+(defn- add-stage?
+  [server-type]
+  (cond (= :snap server-type) true
+        (= :go server-type) true
+        :default false))
 
-(defn- add-stage-to-name-if-snap [data, server-type]
-	(if (= :snap server-type)
-		(map add-stage-to-name data)
-		data))
+(defn- add-stage
+  [data server-type]
+  (if (add-stage? server-type)
+    (map with-stage data)
+    data))
 
 (defn- interesting-projects [url select-pattern exclude-pattern]
-	(let [server-type (server/type url)]
-		(-> (all-projects url server-type)
-			(select-projects select-pattern)
-			(exclude-projects exclude-pattern)
-			(add-stage-to-name-if-snap server-type))))
+  (let [server-type (server/type url)]
+    (-> (all-projects url server-type)
+        (select-projects select-pattern)
+        (exclude-projects exclude-pattern)
+        (add-stage server-type))))
 
 (defn find-names
 	[{:keys [url select exclude]}]

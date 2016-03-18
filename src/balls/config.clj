@@ -56,3 +56,5 @@
 			override-url
 			override-red-alert-threshold
 			override-glitch-effect-threshold))
+
+(defn stage-delimiter [] (or (config-attr :stage-delimiter) "-"))
