@@ -67,7 +67,7 @@
 (defn find-names
 	[{:keys [url select exclude]}]
 	(if-not (empty? url)
-		{:names (->> (interesting-projects url select exclude) (map :name))}
+		{:names (->> (interesting-projects url select exclude) (map :name) distinct)}
 		{:name []}))
 
 (defn get-filtered-projects
