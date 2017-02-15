@@ -10,3 +10,5 @@ config.json
 videos
 username
 password
+/resources/config/password
+/resources/config/username

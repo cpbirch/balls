@@ -1,7 +1,11 @@
 {
   "cctray-url": "",
+  "cctray-urls": [
+    "",
+    ""
+  ],
   "include": ".*",
   "exclude": ".*qa",
-  "glitch-effect-threshold": 3,
-  "red-alert-threshold": 5
+  "glitch-effect-threshold": 2,
+  "red-alert-threshold": 4
 }

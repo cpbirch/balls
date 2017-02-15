@@ -31,7 +31,7 @@ Thanks to [clj-cctray](https://github.com/build-canaries/clj-cctray)
 
 ### Setup without server side config
 
-	1. lein ring server
+	1. lein run
 	2. launch browser at <hostname>:3000
 	3. Setup config right there.
 
@@ -40,8 +40,8 @@ Thanks to [clj-cctray](https://github.com/build-canaries/clj-cctray)
 ### Setup with server side config
 
 	1. Copy config.json.sample to config.json under resources/config.
-	2. Set url, include/exclude regex.
-	2. lein ring server
+	2. Set url, include/exclude regex OR add multiple cctray urls
+	2. lein run
 	3. launch browser at <hostname>:3000
 
 	You cannot override cctray url. You can still do custom include/exclude from browser.
@@ -58,7 +58,7 @@ Thanks to [clj-cctray](https://github.com/build-canaries/clj-cctray)
 	The server keeps things in memory and uses it to send requests to CI server.
 	So, if you need to restart radiator server again, the credential files will need to exist at time of startup.
 
-	Note: Only tested with Go CI Server.
+	Note: Only tested with Go CI Server and Jenkins
 
 ### Sounds
 

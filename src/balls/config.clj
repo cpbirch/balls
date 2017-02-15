@@ -11,18 +11,18 @@
 (def username-file "resources/config/username")
 (def password-file "resources/config/password")
 
-(def ^:private -config (atom {}))
+(def ^:private config (atom {}))
 (def ^:private username (atom nil))
 (def ^:private password (atom nil))
 
-(defn- config-attr [attr]
-	(attr @-config))
+(defn config-attr [attr]
+	(attr @config))
 
 (defn- file-exists? [file]
 	(.exists (as-file file)))
 
 (defn- reset-config [new-val]
-	(reset! -config new-val))
+	(reset! config new-val))
 
 (defn read-credentials []
 	(when (and (file-exists? username-file) (file-exists? password-file))

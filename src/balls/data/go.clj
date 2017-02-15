@@ -19,21 +19,39 @@
 	(when-let [credentials (config/credentials)]
 		{"Authorization" (str "Basic " (base64/encode (clj-str/join ":" credentials)))}))
 
-(def headers (merge {"Accept" "application/xml"} (basic-auth-header)))
+(defn headers [] (merge {"Accept" "application/xml"} (basic-auth-header)))
 
+(defn get [url request]
+	;(println url)
+	;(println request)
+	(client/get url request))
 
-(defn fetch-cctray [url server-type]	
+(defn fetch-cctray [url server-type]
 	(if (= :unknown server-type)
 		[url server-type]
-		[(:body (client/get 
-			url 
-			{:timeout 10000 :headers headers :as :stream :insecure? true})) 
+		[(:body (get
+			url
+			{:timeout 10000 :headers (headers) :as :stream :insecure? true}))
 		server-type]))
 
 (defn parse-cctray [[xml-data server-type]]
 	(parser/get-projects xml-data {:normalise :all :server server-type}))
 
-(def all-projects (comp parse-cctray fetch-cctray))
+(defn fetch-one-projects [url server-type]
+  (-> (fetch-cctray url server-type)
+      (parse-cctray )))
+
+(defn fetch-all-projects [urls]
+  (->> urls
+       (map #(-> [(str %1) (server/type %1)]))
+       (mapcat #(fetch-one-projects (nth %1 0) (nth %1 1)))
+  ))
+
+(defn fetch-projects [url server-type]
+  (if-let [urls (config/config-attr :cctray-urls)]
+    (fetch-all-projects urls)
+    (fetch-one-projects url server-type)
+    ))
 
 (defn- exclude-projects [projects exclude-pattern]
 	(if (empty? exclude-pattern)
@@ -55,7 +73,7 @@
 
 (defn- interesting-projects [url select-pattern exclude-pattern]
 	(let [server-type (server/type url)]
-		(-> (all-projects url server-type)
+		(-> (fetch-projects url server-type)
 			(select-projects select-pattern)
 			(exclude-projects exclude-pattern)
 			(add-stage-to-name-if-snap server-type))))
