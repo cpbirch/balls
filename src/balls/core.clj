@@ -10,5 +10,4 @@
 (defn -main
   [& _args]
   (config/config-from-file)
-  (println (config/credentials))
   (run-jetty app {:port port :join? false}))
